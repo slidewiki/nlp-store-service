@@ -36,7 +36,8 @@
         "inert": "^4.1.0",
         "joi": "^10.2.0",
         "mongodb": "^2.2.22",
-        "vision": "^4.1.1"
+        "vision": "^4.1.1",
+        "mongo-trigger": "^0.1.5"
     },
     "engines": {
         "node": ">=6.9.0"
