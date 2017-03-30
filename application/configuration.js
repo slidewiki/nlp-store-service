@@ -19,7 +19,7 @@ try {
 //read mongo URL from ENV
 host = (!co.isEmpty(process.env.DATABASE_URL)) ? process.env.DATABASE_URL : host;
 if(host !== 'localhost')
-console.log('Using ' + host + ' as database host.');
+    console.log('Using ' + host + ' as database host.');
 
 let port = 27017;
 //read mongo port from ENV

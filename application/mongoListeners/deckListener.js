@@ -22,12 +22,12 @@ module.exports = {
             switch(event.operation){
                 case 'insert':
                     nlpStore.handleDeckUpdate(event.data._id).catch( (err) => {
-                        console.log(err);
+                        console.log('deck listener: deck ' + event.data._id + ' - ' + err.message);
                     });
                     break;
                 case 'update':
                     nlpStore.handleDeckUpdate(event.targetId).catch( (err) => {
-                        console.log(err);
+                        console.log('deck listener: deck ' + event.targetId + ' - ' + err.message);
                     });
                     break;
             }

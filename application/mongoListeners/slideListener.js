@@ -22,12 +22,12 @@ module.exports = {
             switch(event.operation){
                 case 'insert':
                     nlpStore.handleSlideUpdate(event.data._id).catch( (err) => {
-                        console.log(err);
+                        console.log('slide listener: slide ' + event.data._id + ' - ' + err.message);
                     });
                     break;
                 case 'update':
                     nlpStore.handleSlideUpdate(event.targetId).catch( (err) => {
-                        console.log(err);
+                        console.log('slide listener: slide ' + event.targetId + ' - ' + err.message);
                     });
                     break;
             }

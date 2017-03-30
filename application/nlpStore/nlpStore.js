@@ -1,8 +1,11 @@
 'use strict';
 
-
+const nlpService = require('../services/nlp'),
+    deckService = require('../services/deck'),
+    nlpDB = require('../database/nlpDatabase');
+    
 function handleDeckUpdate(deckId){
-    console.log(deckId);
+    return nlpService.nlpForDeck(deckId).then( (nlpResult) => nlpDB.insert(nlpResult));
 }
 
 
