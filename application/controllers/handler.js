@@ -5,46 +5,106 @@ Handles the requests by executing stuff and replying to the client. Uses promise
 'use strict';
 
 const boom = require('boom'), //Boom gives us some predefined http codes and proper responses
-  slideDB = require('../database/slideDatabase'), //Database functions specific for slides
-  co = require('../common');
+    // co = require('../common'),
+    async = require('async'),
+    ProgressBar = require('progress');
+
+const deckDB = require('../database/deckDatabase'),
+    nlpDB = require('../database/nlpDatabase'),
+    nlpService = require('../services/nlp');
 
 module.exports = {
-  //Get slide from database or return NOT FOUND
-  getSlide: function(request, reply) {
-    slideDB.get(encodeURIComponent(request.params.id)).then((slide) => {
-      if (co.isEmpty(slide))
-        reply(boom.notFound());
-      else
-        reply(co.rewriteID(slide));
-    }).catch((error) => {
-      request.log('error', error);
-      reply(boom.badImplementation());
-    });
-  },
+    init: function(request, reply){
+        reply('NLP results are computed for all decks\nPlease check the logs for progress');
+        let limit = 100;
 
-  //Create Slide with new id and payload or return INTERNAL_SERVER_ERROR
-  newSlide: function(request, reply) {
-    slideDB.insert(request.payload).then((inserted) => {
-      if (co.isEmpty(inserted.ops[0]))
-        throw inserted;
-      else
-        reply(co.rewriteID(inserted.ops[0]));
-    }).catch((error) => {
-      request.log('error', error);
-      reply(boom.badImplementation());
-    });
-  },
+        deckDB.getTotalCount().then( (totalCount) => {
+            let offset = 0;
+            let progressBar = new ProgressBar('Progress [:bar] :percent', { total: totalCount });
 
-  //Update Slide with id id and payload or return INTERNAL_SERVER_ERROR
-  replaceSlide: function(request, reply) {
-    slideDB.replace(encodeURIComponent(request.params.id), request.payload).then((replaced) => {
-      if (co.isEmpty(replaced.value))
-        throw replaced;
-      else
-        reply(replaced.value);
-    }).catch((error) => {
-      request.log('error', error);
-      reply(boom.badImplementation());
-    });
-  },
+            async.doWhilst(
+                (callback) => {
+                    deckDB.getAllIds(offset, limit, {_id:1}).then( (allDecks) => {
+                        async.eachSeries(allDecks, (deck, callback2) => {
+                            progressBar.tick();
+                            nlpService.nlpForDeck(deck._id).then( (nlpResult) => {
+                                nlpDB.insert(nlpResult).then( () => {
+                                    callback2();
+                                }).catch( (err) => {
+                                    console.log('deck ' + deck._id + ': ' + err.message);
+                                    callback2();
+                                });
+                            }).catch( () => {
+                                console.log('deck ' + deck._id + ': NLP errored');
+                                callback2();
+                            });
+                        }, () => {
+                            offset += limit;
+                            callback();
+                        });
+
+                    }).catch( (err) => {
+                        request.log('error', err.message);
+                        reply(boom.badImplementation());
+                    });
+                },
+                () => { return offset <= totalCount; },
+                () => { console.log('Initial NLP results have been computed for all decks'); }
+            );
+
+        }).catch( (err) => {
+            request.log('error', err.message);
+            reply(boom.badImplementation());
+        });
+    },
+
+    initDeck: function(request, reply){
+        nlpService.nlpForDeck(request.params.deckId).then( (nlpResult) => {
+            nlpDB.insert(nlpResult).then( (res) => {
+                reply(res.value);
+            }).catch( (err) => {
+                request.log('error', err.message);
+                reply(boom.badImplementation());
+            });
+        }).catch( (err) => {
+            request.log('error', err.message);
+            reply(boom.badImplementation());
+        });
+    },
+
+    getDeckNLP: function(request, reply){
+        nlpDB.get(request.params.deckId).then( (nlpResult) => {
+            if(!nlpResult){
+                reply(boom.notFound());
+            }
+            else{
+                reply(nlpResult);
+            }
+        }).catch( (err) => {
+            request.log('error', err.message);
+            reply(boom.badImplementation());
+        });
+    },
+
+    getNumberOfDecks: function(request, reply){
+        let query = {};
+
+        // add filter
+        if(request.query.field && request.query.value){
+            query[decodeURIComponent(request.query.field)] = decodeURIComponent(request.query.value);
+        }
+
+        // add language filter
+        if(request.query.detectedLanguage){
+            query.detectedLanguage = request.query.detectedLanguage;
+        }
+
+        console.log(query);
+        nlpDB.getCount(query).then( (count) => {
+            reply(count);
+        }).catch( (err) => {
+            request.log('error', err);
+            reply(boom.badImplementation());
+        });
+    }
 };

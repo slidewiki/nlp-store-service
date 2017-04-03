@@ -1,7 +1,7 @@
 {
-  "ecmaVersion": 6,
-  "plugins": {
-    "complete_strings": {},
-    "node": {}
-  }
+    "ecmaVersion": 6,
+    "plugins": {
+        "complete_strings": {},
+        "node": {}
+    }
 }
