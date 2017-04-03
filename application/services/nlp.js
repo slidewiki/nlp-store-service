@@ -8,8 +8,6 @@ const deckConfidence = 0.6, slideConfidence = 0.6;
 module.exports = {
 
     nlpForDeck: function(deckId){
-        console.log(deckId);
-
         return rp.get({
             uri: Microservices.nlp.uri + '/nlp/nlpForDeck/' + deckId +
                 '?dbpediaSpotlightConfidenceForSlide=' + slideConfidence +

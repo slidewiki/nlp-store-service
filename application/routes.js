@@ -96,4 +96,37 @@ module.exports = function(server) {
             description: 'Stores NLP results for a single deck'
         }
     });
+
+    server.route({
+        method: 'GET',
+        path: '/nlp/{deckId}',
+        handler: handlers.getDeckNLP,
+        config: {
+            validate: {
+                params: {
+                    deckId: Joi.string()
+                }
+            },
+            tags: ['api'],
+            description: 'Retrieve NLP results for a single deck'
+        }
+    });
+
+    server.route({
+        method: 'GET',
+        path: '/statistics/deckCount',
+        handler: handlers.getNumberOfDecks,
+        config: {
+            validate: {
+                query: {
+                    field: Joi.string(),
+                    value: Joi.string(),
+                    detectedLanguage: Joi.string()
+                }
+            },
+            tags: ['api'],
+            description: 'Retrieve NLP results for a single deck'
+        }
+    });
+
 };

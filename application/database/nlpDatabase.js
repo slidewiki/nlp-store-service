@@ -23,9 +23,15 @@ function insert(nlpResult) {
             return col.findOneAndReplace(
                 { deckId: nlpResult.deckId },
                 nlpResult,
-                { upsert:true }
+                { upsert:true, returnOriginal:false }
             );
         });
+}
+
+function getCount(query){
+    return helper.connectToDatabase()
+        .then((db) => db.collection('nlp'))
+        .then((col) => col.find(query).count());
 }
 //
 // function replace(tagName, tag) {
@@ -85,4 +91,4 @@ function insert(nlpResult) {
 //
 // }
 
-module.exports = { get, insert };
+module.exports = { get, getCount, insert };

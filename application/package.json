@@ -39,7 +39,8 @@
         "vision": "^4.1.1",
         "mongo-trigger": "^0.1.5",
         "async": "^2.2.0",
-        "request-promise-native": "^1.0.3"
+        "request-promise-native": "^1.0.3",
+        "progress":"^1.1.8"
     },
     "engines": {
         "node": ">=6.9.0"
