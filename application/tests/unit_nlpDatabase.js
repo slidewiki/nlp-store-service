@@ -25,7 +25,7 @@ describe('deckDatabase', function() {
     context('when querying the nlp results database, it', () => {
 
         it('should return stored nlp results for a deck', () => {
-            let deckId = "31";
+            let deckId = '31';
             let res = nlpDB.get(deckId);
             return Promise.all([
                 res.should.be.fulfilled.and.eventually.not.be.empty,
@@ -34,7 +34,7 @@ describe('deckDatabase', function() {
         });
 
         it('should return null when nlp results for a deck are not stored', () => {
-            let deckId = "12323";
+            let deckId = '12323';
             let res = nlpDB.get(deckId);
             return Promise.resolve(
                 res.should.be.fulfilled.and.eventually.be.null
@@ -49,10 +49,9 @@ describe('deckDatabase', function() {
             let res2 = nlpDB.getCount(query2);
 
             return Promise.all([
-                    res.should.be.fulfilled.and.eventually.equal(2),
-                    res2.should.be.fulfilled.and.eventually.equal(3)
-                ]
-            );
+                res.should.be.fulfilled.and.eventually.equal(2),
+                res2.should.be.fulfilled.and.eventually.equal(3)
+            ]);
         });
     });
 });

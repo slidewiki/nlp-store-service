@@ -127,17 +127,17 @@ module.exports = {
     },
 
     applyFixtures: function(db, data) {
-       let async = require('async');
-       var names = Object.keys(data.collections);
+        let async = require('async');
+        var names = Object.keys(data.collections);
 
-       return new Promise((resolve) => {
-           async.eachSeries(names, function(name, cb) {
-               db.createCollection(name, function(err, collection) {
-                   if (err) return cb(err);
-                   // console.log(data.collections[name].length);
-                   collection.insert(data.collections[name], cb);
-               });
-           }, resolve);
-       });
-   },
+        return new Promise((resolve) => {
+            async.eachSeries(names, function(name, cb) {
+                db.createCollection(name, function(err, collection) {
+                    if (err) return cb(err);
+                    // console.log(data.collections[name].length);
+                    collection.insert(data.collections[name], cb);
+                });
+            }, resolve);
+        });
+    },
 };
