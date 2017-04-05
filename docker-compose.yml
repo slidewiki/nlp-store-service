@@ -10,7 +10,7 @@ nlpstore:
     - DATABASE_PORT=27017
     - DATABASE_URL=mongodb # use a url or the name, defined in the docker-compose file
     - VIRTUAL_HOST=nlpstore.experimental.slidewiki.org
-    - LETSENCRYPT_HOST=microservicetemplate.experimental.slidewiki.org
+    - LETSENCRYPT_HOST=nlpstore.experimental.slidewiki.org
     - LETSENCRYPT_EMAIL=meissner@informatik.uni-leipzig.de
     - SERVICE_URL_DECK=https://deckservice.experimental.slidewiki.org
     - SERVICE_URL_DISCUSSION=https://discussionservice.experimental.slidewiki.org
