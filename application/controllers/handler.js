@@ -99,7 +99,7 @@ module.exports = {
             query.detectedLanguage = request.query.detectedLanguage;
         }
 
-        console.log(query);
+        // console.log(query);
         nlpDB.getCount(query).then( (count) => {
             reply(count);
         }).catch( (err) => {

@@ -22,3 +22,4 @@ nlpstore:
     - SERVICE_URL_FILE=https://fileservice.experimental.slidewiki.org
     - SERVICE_URL_PDF=https://pdfservice.experimental.slidewiki.org
     - SERVICE_URL_IMPORT=https://importservice.experimental.slidewiki.org
+    - SERVICE_URL_NLP=https://nlpservice.experimental.slidewiki.org

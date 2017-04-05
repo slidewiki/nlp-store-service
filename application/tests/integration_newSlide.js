@@ -15,36 +15,34 @@
 //         server = new hapi.Server();
 //         server.connection({
 //             host: 'localhost',
-//             port: 3000
+//             port: 3000,
+//             timeout: {
+//                 server: 5000
+//             }
 //         });
 //         require('../routes.js')(server);
 //         done();
 //     });
 //
-//     let slide = {
-//         title: 'Dummy',
-//         body: 'dummy',
-//         language: 'en'
-//     };
 //     let options = {
 //         method: 'POST',
-//         url: '/slide/new',
-//         payload: slide,
+//         url: '/init/475',
 //         headers: {
 //             'Content-Type': 'application/json'
 //         }
 //     };
 //
-//     context('when creating a slide it', () => {
-//         it('should reply it', (done) => {
+//     context('when computing nlp results for a deck, it', () => {
+//         it('should reply with the nlp results', (done) => {
 //             server.inject(options, (response) => {
+//                 console.log(response);
 //                 response.should.be.an('object').and.contain.keys('statusCode','payload');
-//                 response.statusCode.should.equal(200);
-//                 response.payload.should.be.a('string');
-//                 let payload = JSON.parse(response.payload);
-//                 payload.should.be.an('object').and.contain.keys('title', 'language');
-//                 payload.title.should.equal('Dummy');
-//                 payload.language.should.equal('en');
+//                 // response.statusCode.should.equal(200);
+//                 // response.payload.should.be.a('string');
+//                 // let payload = JSON.parse(response.payload);
+//                 // payload.should.be.an('object').and.contain.keys('title', 'language');
+//                 // payload.title.should.equal('Dummy');
+//                 // payload.language.should.equal('en');
 //                 done();
 //             });
 //         });
