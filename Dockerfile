@@ -9,7 +9,7 @@ WORKDIR /nodeApp
 # ---------------- #
 
 ADD ./application/package.json ./
-RUN npm install --production
+RUN npm install
 
 ADD ./application/ ./
 
