@@ -106,5 +106,19 @@ module.exports = {
             request.log('error', err);
             reply(boom.badImplementation());
         });
+    },
+
+    getTermFrequencies: function(request, reply){
+        nlpDB.getTermFrequencies(request.params.deckId).then( (termFreq) => {
+            if(!termFreq){
+                reply(boom.notFound());
+            }
+            else{
+                reply(termFreq);
+            }
+        }).catch( (err) => {
+            request.log('error', err);
+            reply(boom.badImplementation());
+        });
     }
 };

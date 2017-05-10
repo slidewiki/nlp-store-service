@@ -33,62 +33,72 @@ function getCount(query){
         .then((db) => db.collection('nlp'))
         .then((col) => col.find(query).count());
 }
-//
-// function replace(tagName, tag) {
-//     return helper.connectToDatabase()
-//         .then((db) => db.collection('tags'))
-//         .then((col) => {
-//             let valid = false;
-//             try {
-//                 valid = tagModel(tag);
-//                 if (!valid) {
-//                     return tagModel.errors;
-//                 }
-//                 // set timestamp
-//                 tag.timestamp = (new Date()).toISOString();
-//
-//                 return col.findOneAndReplace({
-//                     tagName: tagName
-//                 }, tag);
-//             } catch (e) {
-//                 console.log('validation failed', e);
-//             }
-//             return;
-//         });
-// }
 
-// function bulkUpload(tags, user){
-//     try {
-//         let promises = [];
-//
-//         tags.forEach( (newTag) => {
-//             newTag.user = user;
-//             promises.push(insert(newTag));
-//         });
-//
-//         return Promise.all(promises);
-//     } catch (e) {
-//         console.log('validation failed', e);
-//     }
-//     return;
-// }
-//
-// function suggest(q, limit){
-//
-//     let query = {tagName: new RegExp('^' + co.escape(q), 'i')};
-//     let projection = {
-//         _id: 0,
-//         tagName: 1,
-//         name: 1,
-//         uri: 1,
-//     };
-//     return helper.connectToDatabase()
-//     .then((db) => db.collection('tags'))
-//     .then((col) => col.find(query, projection)
-//                         .skip(0)    // offeset
-//                         .limit(parseInt(limit)))
-//     .then((cursor) => cursor.toArray());
-//
-// }
+function getTermFrequencies(deckId){
 
-module.exports = { get, getCount, insert };
+    return get(deckId).then( (nlpResult) => {
+        // TODO: if not found, compute nlp now
+        if(!nlpResult)  return;
+
+        let {
+            detectedLanguage,
+            wordFrequenciesExclStopwords,
+            NERFrequencies,
+            DBPediaSpotlightURIFrequencies
+        } = nlpResult;
+
+        let promises = [];
+
+        wordFrequenciesExclStopwords.forEach( (item) => {
+            promises.push(getCount({
+                'wordFrequenciesExclStopwords.entry': item.entry
+            }).then( (freq) => {
+                item.frequencyOtherDecks = freq;
+            }));
+            promises.push(getCount({
+                'wordFrequenciesExclStopwords.entry': item.entry,
+                'detectedLanguage': detectedLanguage
+            }).then( (freq) => {
+                item.frequencyOtherDecksWithLanguageRestriction = freq;
+            }));
+        });
+
+        NERFrequencies.forEach( (item) => {
+            promises.push(getCount({
+                'NERFrequencies.entry': item.entry
+            }).then( (freq) => {
+                item.frequencyOtherDecks = freq;
+            }));
+            promises.push(getCount({
+                'NERFrequencies.entry': item.entry,
+                'detectedLanguage': detectedLanguage
+            }).then( (freq) => {
+                item.frequencyOtherDecksWithLanguageRestriction = freq;
+            }));
+        });
+
+        DBPediaSpotlightURIFrequencies.forEach( (item) => {
+            promises.push(getCount({
+                'DBPediaSpotlightURIFrequencies.entry': item.entry
+            }).then( (freq) => {
+                item.frequencyOtherDecks = freq;
+            }));
+            promises.push(getCount({
+                'DBPediaSpotlightURIFrequencies.entry': item.entry,
+                'detectedLanguage': detectedLanguage
+            }).then( (freq) => {
+                item.frequencyOtherDecksWithLanguageRestriction = freq;
+            }));
+        });
+
+        return Promise.all(promises).then( () => {
+            return {
+                wordFrequenciesExclStopwords,
+                NERFrequencies,
+                DBPediaSpotlightURIFrequencies
+            };
+        });
+    });
+}
+
+module.exports = { get, getCount, insert, getTermFrequencies };
