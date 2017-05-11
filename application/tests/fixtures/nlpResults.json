@@ -2,362 +2,424 @@
     "collections": {
         "nlp": [
             {
-              "_id": "58e3b3d8e0b99eb3321bb289",
-              "deckId": "30",
-              "children": [
-                {
-                  "slideId": "230-1",
-                  "slideTitleAndText": "test",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "test"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "test",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "264-1",
-                  "slideTitleAndText": "qdwqf",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "qdwqf"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "qdwqf",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "254-1",
-                  "slideTitleAndText": "eee",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "eee"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "eee",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "263-3",
-                  "slideTitleAndText": "perhaps",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "perhaps"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "perhaps",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                }
-              ],
-              "detectedLanguage": "en",
-              "frequencyOfMostFrequentWord": 1,
-              "wordFrequenciesExclStopwords": [
-                {
-                  "word": "qdwqf",
-                  "frequency": 1
-                },
-                {
-                  "word": "eee",
-                  "frequency": 1
-                },
-                {
-                  "word": "test",
-                  "frequency": 1
-                },
-                {
-                  "word": "perhaps",
-                  "frequency": 1
-                }
-              ],
-              "DBPediaSpotlight": {
-                "@text": "\ntest\nqdwqf\neee\nperhaps",
-                "@confidence": "0.6",
-                "@support": "0",
-                "@types": "",
-                "@sparql": "",
-                "@policy": "whitelist"
-              },
-              "TFIDF": {
-                "TFIDF_forSpotlightEntitiesRetrievedPerDeck_docFreqProvider_Spotlight_SlideWiki2_perDeck_notlanguageDependent": []
-              }
-          },
-          {
-              "_id": "58e3b3cfe0b99eb3321bb288",
-              "deckId": "31",
-              "children": [
-                {
-                  "slideId": "231-2",
-                  "slideTitleAndText": "I AM LEGEND",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "I",
-                    "AM",
-                    "LEGEND"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "I AM LEGEND",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist",
-                    "Resources": [
-                      {
-                        "@URI": "http://dbpedia.org/resource/I_Am_Legend_(film)",
-                        "@support": "180",
-                        "@types": "Schema:CreativeWork,DBpedia:Work,Schema:Movie,DBpedia:Film",
-                        "@surfaceForm": "I AM LEGEND",
-                        "@offset": "0",
-                        "@similarityScore": "0.788776012951175",
-                        "@percentageOfSecondRank": "0.2668071564195979"
-                      }
-                    ]
-                  }
-                },
-                {
-                  "slideId": "234-2",
-                  "slideTitleAndText": "Test Slide  ",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "Test",
-                    "Slide"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "Test Slide  ",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist",
-                    "Resources": [
-                      {
-                        "@URI": "http://dbpedia.org/resource/Test_cricket",
-                        "@support": "15862",
-                        "@types": "",
-                        "@surfaceForm": "Test",
-                        "@offset": "0",
-                        "@similarityScore": "0.99817313473095",
-                        "@percentageOfSecondRank": "8.966152886431357E-4"
-                      }
-                    ]
-                  }
-                }
-              ],
-              "detectedLanguage": "UNKNOWN",
-              "frequencyOfMostFrequentWord": 1,
-              "wordFrequenciesExclStopwords": [
-                {
-                  "word": "slide",
-                  "frequency": 1
-                },
-                {
-                  "word": "legend",
-                  "frequency": 1
-                },
-                {
-                  "word": "am",
-                  "frequency": 1
-                },
-                {
-                  "word": "test",
-                  "frequency": 1
-                },
-                {
-                  "word": "i",
-                  "frequency": 1
-                }
-              ],
-              "DBPediaSpotlight": {
-                "@text": "\nI AM LEGEND\nTest Slide  ",
-                "@confidence": "0.6",
-                "@support": "0",
-                "@types": "",
-                "@sparql": "",
-                "@policy": "whitelist",
-                "Resources": [
-                  {
-                    "@URI": "http://dbpedia.org/resource/Test_cricket",
-                    "@support": "15862",
-                    "@types": "",
-                    "@surfaceForm": "Test",
-                    "@offset": "13",
-                    "@similarityScore": "0.9985121608274955",
-                    "@percentageOfSecondRank": "5.531993832532256E-4"
-                  }
-                ]
-              },
-              "TFIDF": {
-                "TFIDF_forSpotlightEntitiesRetrievedPerSlide_docFreqProvider_Spotlight_SlideWiki2_perDeck_notlanguageDependent": [
-                  {
-                    "spotlightEntity": "http://dbpedia.org/resource/I_Am_Legend_(film)",
-                    "tfidf": "Infinity"
-                  },
-                  {
-                    "spotlightEntity": "http://dbpedia.org/resource/Test_cricket",
-                    "tfidf": 4.664486763144511
-                  }
+                "_id": "58e3b3d8e0b99eb3321bb289",
+                "deckId": "30",
+                "children": [
+                    {
+                        "slideId": "230-1",
+                        "slideTitleAndText": "test",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "test"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "test",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "264-1",
+                        "slideTitleAndText": "qdwqf",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "qdwqf"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "qdwqf",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "254-1",
+                        "slideTitleAndText": "eee",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "eee"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "eee",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "263-3",
+                        "slideTitleAndText": "perhaps",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "perhaps"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "perhaps",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    }
                 ],
-                "TFIDF_forSpotlightEntitiesRetrievedPerDeck_docFreqProvider_Spotlight_SlideWiki2_perDeck_notlanguageDependent": [
-                  {
-                    "spotlightEntity": "http://dbpedia.org/resource/Test_cricket",
-                    "tfidf": 4.664486763144511
-                  }
+                "detectedLanguage": "UNKNOWN",
+                "NER": [],
+                "DBPediaSpotlight": {
+                    "@text": "my subdeck\ntest\nqdwqf\neee\nperhaps",
+                    "@confidence": "0.6",
+                    "@support": "0",
+                    "@types": "",
+                    "@sparql": "",
+                    "@policy": "whitelist"
+                },
+                "frequencyOfMostFrequentWord": 1,
+                "wordFrequenciesExclStopwords": [
+                    {
+                        "entry": "qdwqf",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "subdeck",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "my",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "eee",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "test",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "perhaps",
+                        "frequency": 1
+                    }
+                ],
+                "NERFrequencies": [],
+                "DBPediaSpotlightURIFrequencies": []
+            },
+            {
+                "_id": "58e3b3cfe0b99eb3321bb288",
+                "deckId": "31",
+                "children": [
+                    {
+                        "slideId": "231-2",
+                        "slideTitleAndText": "I AM LEGEND",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "I",
+                            "AM",
+                            "LEGEND"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "I AM LEGEND",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist",
+                            "Resources": [
+                                {
+                                    "@URI": "http://dbpedia.org/resource/I_Am_Legend_(film)",
+                                    "@support": "180",
+                                    "@types": "Schema:CreativeWork,DBpedia:Work,Schema:Movie,DBpedia:Film",
+                                    "@surfaceForm": "I AM LEGEND",
+                                    "@offset": "0",
+                                    "@similarityScore": "0.788776012951175",
+                                    "@percentageOfSecondRank": "0.2668071564195979"
+                                }
+                            ]
+                        }
+                    },
+                    {
+                        "slideId": "234-2",
+                        "slideTitleAndText": "Test Slide  ",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "Test",
+                            "Slide"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "Test Slide  ",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist",
+                            "Resources": [
+                                {
+                                    "@URI": "http://dbpedia.org/resource/Test_cricket",
+                                    "@support": "15862",
+                                    "@types": "",
+                                    "@surfaceForm": "Test",
+                                    "@offset": "0",
+                                    "@similarityScore": "0.99817313473095",
+                                    "@percentageOfSecondRank": "8.966152886431357E-4"
+                                }
+                            ]
+                        }
+                    }
+                ],
+                "detectedLanguage": "de",
+                "NER": [],
+                "DBPediaSpotlight": {
+                    "@text": "Test Deck 1\nI AM LEGEND\nTest Slide  ",
+                    "@confidence": "0.6",
+                    "@support": "0",
+                    "@types": "",
+                    "@sparql": "",
+                    "@policy": "whitelist",
+                    "Resources": [
+                        {
+                            "@URI": "http://dbpedia.org/resource/Test_cricket",
+                            "@support": "15862",
+                            "@types": "",
+                            "@surfaceForm": "Test",
+                            "@offset": "0",
+                            "@similarityScore": "0.9985751076742285",
+                            "@percentageOfSecondRank": "5.314612840688816E-4"
+                        },
+                        {
+                            "@URI": "http://dbpedia.org/resource/Test_cricket",
+                            "@support": "15862",
+                            "@types": "",
+                            "@surfaceForm": "Test",
+                            "@offset": "24",
+                            "@similarityScore": "0.9985751076606907",
+                            "@percentageOfSecondRank": "5.314612840688816E-4"
+                        }
+                    ]
+                },
+                "frequencyOfMostFrequentWord": 2,
+                "wordFrequenciesExclStopwords": [
+                    {
+                        "entry": "test",
+                        "frequency": 2
+                    },
+                    {
+                        "entry": "i",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "deck",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "slide",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "legend",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "1",
+                        "frequency": 1
+                    }
+                ],
+                "NERFrequencies": [],
+                "DBPediaSpotlightURIFrequencies": [
+                    {
+                        "entry": "http://dbpedia.org/resource/Test_cricket",
+                        "frequency": 2
+                    }
                 ]
-              }
-          },
-          {
-              "_id": "58e3b435e0b99eb3321bb28f",
-              "deckId": "37",
-              "children": [
-                {
-                  "slideId": "257-2",
-                  "slideTitleAndText": "qwfqf\ntest",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "qwfqf",
-                    "test"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "qwfqf\ntest",
+            },
+            {
+                "_id": "58e3b435e0b99eb3321bb28f",
+                "deckId": "37",
+                "children": [
+                    {
+                        "slideId": "257-2",
+                        "slideTitleAndText": "qwfqf\ntest",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "qwfqf",
+                            "test"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "qwfqf\ntest",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "258-1",
+                        "slideTitleAndText": "ll",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "ll"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "ll",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "260-2",
+                        "slideTitleAndText": "qwfqf\n24t23t2t",
+                        "detectedLanguage": "mt",
+                        "tokens": [
+                            "qwfqf",
+                            "24t23t2t"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "qwfqf\n24t23t2t",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "449-1",
+                        "slideTitleAndText": ""
+                    },
+                    {
+                        "slideId": "443-1",
+                        "slideTitleAndText": ""
+                    },
+                    {
+                        "slideId": "261-1",
+                        "slideTitleAndText": "wewet",
+                        "detectedLanguage": "UNKNOWN",
+                        "tokens": [
+                            "wewet"
+                        ],
+                        "NER": [],
+                        "DBPediaSpotlight": {
+                            "@text": "wewet",
+                            "@confidence": "0.6",
+                            "@support": "0",
+                            "@types": "",
+                            "@sparql": "",
+                            "@policy": "whitelist"
+                        }
+                    },
+                    {
+                        "slideId": "444-1",
+                        "slideTitleAndText": ""
+                    },
+                    {
+                        "slideId": "447-1",
+                        "slideTitleAndText": ""
+                    }
+                ],
+                "detectedLanguage": "en",
+                "NER": [
+                    {
+                        "name": "Science , Technology & Innovation Studies",
+                        "type": "organization",
+                        "sourceName": "NER_OPENNLP_en-ner-organization",
+                        "probability": 0.8892989303918766,
+                        "tokenSpanBegin": 7,
+                        "tokenSpanEnd": 13,
+                        "link": ""
+                    }
+                ],
+                "DBPediaSpotlight": {
+                    "@text": "Towards a Linked Open Data Infrastructure  for Science, Technology & Innovation Studies\nqwfqf\ntest\nll\nqwfqf\n24t23t2t\nwewet",
                     "@confidence": "0.6",
                     "@support": "0",
                     "@types": "",
                     "@sparql": "",
                     "@policy": "whitelist"
-                  }
                 },
-                {
-                  "slideId": "258-1",
-                  "slideTitleAndText": "ll",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "ll"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "ll",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "260-2",
-                  "slideTitleAndText": "qwfqf\n24t23t2t",
-                  "detectedLanguage": "mt",
-                  "tokens": [
-                    "qwfqf",
-                    "24t23t2t"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "qwfqf\n24t23t2t",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "449-1",
-                  "slideTitleAndText": ""
-                },
-                {
-                  "slideId": "443-1",
-                  "slideTitleAndText": ""
-                },
-                {
-                  "slideId": "261-1",
-                  "slideTitleAndText": "wewet",
-                  "detectedLanguage": "UNKNOWN",
-                  "tokens": [
-                    "wewet"
-                  ],
-                  "NER": [],
-                  "DBPediaSpotlight": {
-                    "@text": "wewet",
-                    "@confidence": "0.6",
-                    "@support": "0",
-                    "@types": "",
-                    "@sparql": "",
-                    "@policy": "whitelist"
-                  }
-                },
-                {
-                  "slideId": "444-1",
-                  "slideTitleAndText": ""
-                },
-                {
-                  "slideId": "447-1",
-                  "slideTitleAndText": ""
-                }
-              ],
-              "detectedLanguage": "en",
-              "frequencyOfMostFrequentWord": 2,
-              "wordFrequenciesExclStopwords": [
-                {
-                  "word": "qwfqf",
-                  "frequency": 2
-                },
-                {
-                  "word": "wewet",
-                  "frequency": 1
-                },
-                {
-                  "word": "test",
-                  "frequency": 1
-                },
-                {
-                  "word": "24t23t2t",
-                  "frequency": 1
-                },
-                {
-                  "word": "ll",
-                  "frequency": 1
-                }
-              ],
-              "DBPediaSpotlight": {
-                "@text": "\nqwfqf\ntest\nll\nqwfqf\n24t23t2t\nwewet",
-                "@confidence": "0.6",
-                "@support": "0",
-                "@types": "",
-                "@sparql": "",
-                "@policy": "whitelist"
-              },
-              "TFIDF": {
-                "TFIDF_forSpotlightEntitiesRetrievedPerDeck_docFreqProvider_Spotlight_SlideWiki2_perDeck_notlanguageDependent": []
-              }
+                "frequencyOfMostFrequentWord": 2,
+                "wordFrequenciesExclStopwords": [
+                    {
+                        "entry": "qwfqf",
+                        "frequency": 2
+                    },
+                    {
+                        "entry": "linked",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "open",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "studies",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "science",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "infrastructure",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "technology",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "towards",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "24t23t2t",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "wewet",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "test",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "data",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "ll",
+                        "frequency": 1
+                    },
+                    {
+                        "entry": "innovation",
+                        "frequency": 1
+                    }
+                ],
+                "NERFrequencies": [
+                    {
+                        "entry": "Science , Technology & Innovation Studies",
+                        "frequency": 1
+                    }
+                ],
+                "DBPediaSpotlightURIFrequencies": []
             }
         ]
     }

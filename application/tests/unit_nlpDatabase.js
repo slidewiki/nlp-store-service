@@ -12,9 +12,9 @@ chai.should();
 let helper = require('../database/helper.js');
 let nlpDB = require('../database/nlpDatabase');
 
-describe('deckDatabase', function() {
+describe('nlpDatabase', () => {
 
-    beforeEach(function() {
+    beforeEach( () => {
         return helper.cleanDatabase().then(() =>
             helper.connectToDatabase().then((db) =>
                 helper.applyFixtures(db, require('./fixtures/nlpResults.json'))
@@ -43,15 +43,25 @@ describe('deckDatabase', function() {
 
         it('should respond to count queries on the stored nlp results', () => {
             let query = {'detectedLanguage': 'en'};
-            let query2 = {'wordFrequenciesExclStopwords.word': 'test'};
+            let query2 = {'wordFrequenciesExclStopwords.entity': 'test'};
 
             let res = nlpDB.getCount(query);
             let res2 = nlpDB.getCount(query2);
 
             return Promise.all([
-                res.should.be.fulfilled.and.eventually.equal(2),
-                res2.should.be.fulfilled.and.eventually.equal(3)
+                res.should.be.fulfilled.and.eventually.equal(1),
+                res2.should.be.fulfilled.and.eventually.equal(0)
             ]);
+        });
+
+        it('should respond to term freqeuncies for a deck', () => {
+            let deckId = '30';
+            let res = nlpDB.getTermFrequencies(deckId);
+
+            return Promise.resolve(
+                res.should.be.fulfilled.and.eventually.not.be.empty,
+                res.should.eventually.be.an('object').and.contain.keys('wordFrequenciesExclStopwords', 'NERFrequencies', 'DBPediaSpotlightURIFrequencies')
+            );
         });
     });
 });
