@@ -129,31 +129,54 @@ function getTermFrequencies(deckId){
         // TODO: if not found, compute nlp now
         if(!nlpResult)  return;
 
+        let promises = [];
         let frequencies = {};
+        frequencies.language = nlpResult.detectedLanguage;
+        frequencies.frequencyOfMostFrequentWord = nlpResult.frequencyOfMostFrequentWord;
 
+        // compute total frequencies for wordFrequenciesExclStopwords
         let words = nlpResult.wordFrequenciesExclStopwords.map( (item) => { return item.entry; });
-        let wordFrequenciesPromise = getAggregateCounts('wordFrequenciesExclStopwords', deckId, words, nlpResult.detectedLanguage)
-        .then( (wordFreq) => {
-            frequencies.wordFrequenciesExclStopwords = wordFreq;
-        });
+        promises.push(
+            getAggregateCounts('wordFrequenciesExclStopwords', deckId, words, nlpResult.detectedLanguage)
+            .then( (wordFreq) => {
+                frequencies.wordFrequenciesExclStopwords = wordFreq;
+            })
+        );
 
+        // compute total  frequencies for NERFrequencies
         let namedEntities = nlpResult.NERFrequencies.map( (item) => { return item.entry; });
-        let NERFrequenciesPromise = getAggregateCounts('NERFrequencies', deckId, namedEntities, nlpResult.detectedLanguage)
-        .then( (namedEntitiesFreq) => {
-            frequencies.NERFrequencies = namedEntitiesFreq;
-        });
+        promises.push(
+            getAggregateCounts('NERFrequencies', deckId, namedEntities, nlpResult.detectedLanguage)
+            .then( (namedEntitiesFreq) => {
+                frequencies.NERFrequencies = namedEntitiesFreq;
+            })
+        );
 
+        // compute total  frequencies for DBPediaSpotlightURIFrequencies
         let spotlightEntities = nlpResult.DBPediaSpotlightURIFrequencies.map( (item) => { return item.entry; });
-        let spotlightEntitiesPromise = getAggregateCounts('DBPediaSpotlightURIFrequencies', deckId, spotlightEntities, nlpResult.detectedLanguage)
-        .then( (spotlightEntitiesFreq) => {
-            frequencies.DBPediaSpotlightURIFrequencies = spotlightEntitiesFreq;
-        });
+        promises.push(
+            getAggregateCounts('DBPediaSpotlightURIFrequencies', deckId, spotlightEntities, nlpResult.detectedLanguage)
+            .then( (spotlightEntitiesFreq) => {
+                frequencies.DBPediaSpotlightURIFrequencies = spotlightEntitiesFreq;
+            })
+        );
 
-        return Promise.all([
-            wordFrequenciesPromise,
-            NERFrequenciesPromise,
-            spotlightEntitiesPromise
-        ]).then( () => {
+        // compute number all docs
+        promises.push(
+            getCount({}).then( (totalCount) => {
+                frequencies.totalDocs = totalCount;
+            })
+        );
+
+        // compute number of docs with the specific language
+        promises.push(
+            getCount({ 'detectedLanguage': nlpResult.detectedLanguage })
+            .then( (countForLang) => {
+                frequencies.docsForLanguage = countForLang;
+            })
+        );
+
+        return Promise.all(promises).then( () => {
             return frequencies;
         });
     });
