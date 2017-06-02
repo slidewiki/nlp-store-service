@@ -47,7 +47,9 @@ function getAggregateCounts(field, deckId, terms, language){
     let projectFields = {};
     projectFields.$project = {
         'deckId': 1,
-        'detectedLanguage': 1
+        'detectedLanguage': 1,
+        'numberOfSlides': 1,
+        'numberOfSlidesWithText': 1
     };
     projectFields.$project[`${field}`] = 1;
 
@@ -67,59 +69,62 @@ function getAggregateCounts(field, deckId, terms, language){
     groupTermsPerLang.$group.countPerDeck.$push = {};
     groupTermsPerLang.$group.countPerDeck.$push.deckId = '$deckId';
     groupTermsPerLang.$group.countPerDeck.$push.frequency = `$${field}.frequency`;
-
+    groupTermsPerLang.$group.countPerDeck.$push.frequencyInDeckTitle = `$${field}.frequencyInDeckTitle`;
     groupTermsPerLang.$group.count = { $sum: 1 };
+
+    let query = [
+        matchTerms,
+        projectFields,
+        unwindField,
+        matchTerms,
+        groupTermsPerLang,
+        {
+            $group: {
+                _id: '$_id.term',
+                countPerLang: {
+                    $push: {
+                        language: '$_id.language',
+                        count: '$count',
+                        countPerDeck: '$countPerDeck'
+                    }
+                },
+                totalCount: { $sum: '$count' }
+            }
+        },
+        {
+            $unwind: '$countPerLang'
+        },
+        {
+            $match: {
+                'countPerLang.language': language
+            }
+        },
+        {
+            $unwind: '$countPerLang.countPerDeck'
+        },
+        {
+            $match: {
+                'countPerLang.countPerDeck.deckId': deckId
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                entry: '$_id',
+                frequency: '$countPerLang.countPerDeck.frequency',
+                frequencyInDeckTitle: '$countPerLang.countPerDeck.frequencyInDeckTitle',
+                frequencyOtherDecks: '$totalCount',
+                frequencyOtherDecksWithLanguageRestriction: '$countPerLang.count'
+            }
+        }
+    ];
+
+    // console.log(JSON.stringify(query, null, 4));
 
     return helper.connectToDatabase()
         .then((db) => db.collection('nlp'))
         .then((col) => {
-            return col.aggregate(
-                [
-                    matchTerms,
-                    projectFields,
-                    unwindField,
-                    matchTerms,
-                    groupTermsPerLang,
-                    {
-                        $group: {
-                            _id: '$_id.term',
-                            countPerLang: {
-                                $push: {
-                                    language: '$_id.language',
-                                    count: '$count',
-                                    countPerDeck: '$countPerDeck'
-                                }
-                            },
-                            totalCount: { $sum: '$count' }
-                        }
-                    },
-                    {
-                        $unwind: '$countPerLang'
-                    },
-                    {
-                        $match: {
-                            'countPerLang.language': language
-                        }
-                    },
-                    {
-                        $unwind: '$countPerLang.countPerDeck'
-                    },
-                    {
-                        $match: {
-                            'countPerLang.countPerDeck.deckId': deckId
-                        }
-                    },
-                    {
-                        $project: {
-                            _id: 0,
-                            entry: '$_id',
-                            frequency: '$countPerLang.countPerDeck.frequency',
-                            frequencyOtherDecks: '$totalCount',
-                            frequencyOtherDecksWithLanguageRestriction: '$countPerLang.count'
-                        }
-                    }
-                ]
-            );
+            return col.aggregate(query);
         }).then((cursor) => cursor.toArray());
 }
 
@@ -133,6 +138,8 @@ function getTermFrequencies(deckId){
         let frequencies = {};
         frequencies.language = nlpResult.detectedLanguage;
         frequencies.frequencyOfMostFrequentWord = nlpResult.frequencyOfMostFrequentWord;
+        frequencies.numberOfSlides = nlpResult.numberOfSlides;
+        frequencies.numberOfSlidesWithText = nlpResult.numberOfSlidesWithText;
 
         // compute total frequencies for wordFrequenciesExclStopwords
         let words = nlpResult.wordFrequenciesExclStopwords.map( (item) => { return item.entry; });
