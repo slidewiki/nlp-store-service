@@ -12,9 +12,9 @@ chai.should();
 let helper = require('../database/helper.js');
 let deckDB = require('../database/deckDatabase');
 
-describe('deckDatabase', function() {
+describe('deckDatabase', () => {
 
-    beforeEach(function() {
+    beforeEach(() => {
         return helper.cleanDatabase().then(() =>
             helper.connectToDatabase().then((db) =>
                 helper.applyFixtures(db, require('./fixtures/decks.json'))

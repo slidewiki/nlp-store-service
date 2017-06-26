@@ -128,7 +128,7 @@ module.exports = {
 
     applyFixtures: function(db, data) {
         let async = require('async');
-        var names = Object.keys(data.collections);
+        let names = Object.keys(data.collections);
 
         return new Promise((resolve) => {
             async.eachSeries(names, function(name, cb) {
