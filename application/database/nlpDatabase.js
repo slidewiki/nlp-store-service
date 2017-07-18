@@ -4,8 +4,7 @@ Controller for handling mongodb and the data model slide while providing CRUD'is
 
 'use strict';
 
-const helper = require('./helper'),
-    co = require('../common');
+const helper = require('./helper');
 
 function get(deckId) {
     return helper.connectToDatabase()
