@@ -8,32 +8,7 @@ const Joi = require('joi'),
     handlers = require('./controllers/handler');
 
 module.exports = function(server) {
-
-    server.route({
-        method: 'POST',
-        path: '/init',
-        handler: handlers.init,
-        config: {
-            tags: ['api'],
-            description: 'Stores NLP results for all decks'
-        }
-    });
-
-    server.route({
-        method: 'POST',
-        path: '/init/{deckId}',
-        handler: handlers.initDeck,
-        config: {
-            validate: {
-                params: {
-                    deckId: Joi.string()
-                }
-            },
-            tags: ['api'],
-            description: 'Stores NLP results for a single deck'
-        }
-    });
-
+    
     server.route({
         method: 'GET',
         path: '/nlp/{deckId}',

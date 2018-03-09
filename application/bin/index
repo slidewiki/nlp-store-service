@@ -1,0 +1,50 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const deckDB = require('../database/deckDatabase');
+const nlpDB = require('../database/nlpDatabase');
+const nlpService = require('../services/nlp');
+const async = require('async');
+const ProgressBar = require('progress');
+
+let limit = 100;
+
+deckDB.getTotalCount().then( (totalCount) => {
+    let offset = 0;
+    let progressBar = new ProgressBar('Progress [:bar] :percent', { total: totalCount });
+
+    async.doWhilst(
+        (callback) => {
+            deckDB.getAllIds(offset, limit, {_id:1}).then( (allDecks) => {
+                async.eachSeries(allDecks, (deck, callback2) => {
+                    progressBar.tick();
+                    nlpService.nlpForDeck(deck._id).then( (nlpResult) => {
+                        return nlpDB.insert(nlpResult).then( () => {
+                            callback2();
+                        });
+                    }).catch( (err) => {
+                        console.warn('deck ' + deck._id + ': NLP errored');
+                        console.warn(err);
+                        callback2();
+                    });
+                }, () => {
+                    offset += limit;
+                    callback();
+                });
+
+            }).catch( (err) => {
+                console.error(err);
+            });
+        },
+        () => { return offset <= totalCount; },
+        (err) => { 
+            if(err){
+                console.error(err);
+            } else {
+                console.log('Initial NLP results have been computed for all decks');
+            }
+    });
+}).catch( (err) => {
+    console.error(err);
+});
