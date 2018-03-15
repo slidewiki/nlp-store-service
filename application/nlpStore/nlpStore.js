@@ -5,11 +5,12 @@ const nlpService = require('../services/nlp'),
     nlpDB = require('../database/nlpDatabase'),
     async = require('async');
 
+const solr = require('../lib/solrClient');
+
 function handleDeckUpdate(deckId){
     // console.log('deck ' + deckId);
     return nlpService.nlpForDeck(deckId).then( (nlpResult) => nlpDB.insert(nlpResult));
 }
-
 
 function handleSlideUpdate(slideId){
     // console.log('slide ' + slideId);
@@ -35,5 +36,13 @@ function handleSlideUpdate(slideId){
     });
 }
 
+function indexNLPResult(result){
+    let doc = {
+        solr_id: `deck_${result.deckId}`, 
+        namedentity: result.NERFrequencies.map( (ner) => ner.entry)
+    };
+    return solr.add(doc);
+}
 
-module.exports = { handleDeckUpdate, handleSlideUpdate };
+
+module.exports = { handleDeckUpdate, handleSlideUpdate, indexNLPResult };
