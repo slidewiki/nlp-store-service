@@ -6,10 +6,14 @@ const nlpService = require('../services/nlp'),
     async = require('async');
 
 const solr = require('../lib/solrClient');
+const _ = require('lodash');
 
-function handleDeckUpdate(deckId){
-    // console.log('deck ' + deckId);
-    return nlpService.nlpForDeck(deckId).then( (nlpResult) => nlpDB.insert(nlpResult));
+function updateNLPForDeck(deckId){
+    return nlpService.nlpForDeck(deckId).then( (nlpResult) => {
+        return nlpDB.insert(nlpResult).then( () => {
+            return indexNLPResult(nlpResult);
+        });
+    });
 }
 
 function handleSlideUpdate(slideId){
@@ -26,7 +30,7 @@ function handleSlideUpdate(slideId){
 
         // update each parent deck in the usage set
         async.eachSeries(usageSet, (deckId, callback) => {
-            handleDeckUpdate(deckId).then( () => {
+            updateNLPForDeck(deckId).then( () => {
                 callback();
             }).catch( (err) => {
                 console.log('slide update: deck id ' + deckId + ' - NLP errored: ' + err.message);
@@ -37,12 +41,31 @@ function handleSlideUpdate(slideId){
 }
 
 function indexNLPResult(result){
+
+    // expand named entities, spotlight entities and tokens according to their frequency
+    let namedEntities = result.NERFrequencies.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    let spotlightEntities = result.DBPediaSpotlightURIFrequencies.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    let tokens = result.wordFrequenciesExclStopwords.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    // form solr doc and add it to solr
     let doc = {
         solr_id: `deck_${result.deckId}`, 
-        namedentity: result.NERFrequencies.map( (ner) => ner.entry)
+        namedentity: _.flatten(namedEntities),
+        spotlightentity: _.flatten(spotlightEntities),
+        token: _.flatten(tokens),
+        language: result.language
     };
+    
     return solr.add(doc);
 }
 
 
-module.exports = { handleDeckUpdate, handleSlideUpdate, indexNLPResult };
+module.exports = { updateNLPForDeck, handleSlideUpdate, indexNLPResult };
