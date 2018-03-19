@@ -78,7 +78,7 @@ module.exports = {
         }
         
         // return and filter only deck ids
-        query += `&fl=_id, score`;
+        query += '&fl=_id, score';
         
         // pagination params
         let start = (request.payload.page - 1) * request.payload.pageSize;

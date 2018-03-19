@@ -32,7 +32,7 @@ let self = module.exports = {
     query: function(queryString, requestHandler){
         let requestUri = `${solrUri}/${requestHandler}?${queryString}`;
 
-        console.log(requestUri);
+        // console.log(requestUri);
         return rp.get({
             uri: requestUri, 
             json: true
@@ -45,11 +45,4 @@ let self = module.exports = {
             uri: `${solrUri}/update?stream.body=<delete><query>${query}</query></delete>&commit=${commit}`
         });
     }, 
-
-    getById: function(type, solrId){
-        let q = `q=*:*&fq=solr_id:${type}_${solrId}&wt=json`;
-        return self.query(q, 'select').then( (result) => {
-            return result.response.docs;
-        });
-    }
 };
