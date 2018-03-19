@@ -8,32 +8,7 @@ const Joi = require('joi'),
     handlers = require('./controllers/handler');
 
 module.exports = function(server) {
-
-    server.route({
-        method: 'POST',
-        path: '/init',
-        handler: handlers.init,
-        config: {
-            tags: ['api'],
-            description: 'Stores NLP results for all decks'
-        }
-    });
-
-    server.route({
-        method: 'POST',
-        path: '/init/{deckId}',
-        handler: handlers.initDeck,
-        config: {
-            validate: {
-                params: {
-                    deckId: Joi.string()
-                }
-            },
-            tags: ['api'],
-            description: 'Stores NLP results for a single deck'
-        }
-    });
-
+    
     server.route({
         method: 'GET',
         path: '/nlp/{deckId}',
@@ -78,6 +53,25 @@ module.exports = function(server) {
             },
             tags: ['api'],
             description: 'Retrieve term frequencies for single deck'
+        }
+    });
+
+    server.route({
+        method: 'POST',
+        path: '/nlp/query',
+        handler: handlers.getNLPResults,
+        config: {
+            validate: {
+                payload: Joi.object().keys({
+                    query: Joi.string().required().description('Lucene query'), 
+                    language: Joi.string().description('Detected language filter'),
+                    excludeDeckIds: Joi.string().regex(/[0-9](,[0-9])*/).empty('').description('A comma delimited list of deck ids to exclude from results'), 
+                    page: Joi.number().integer().positive().default(1), 
+                    pageSize: Joi.number().integer().positive().default(10)
+                })
+            }, 
+            tags: ['api'],
+            description: 'Retrieve query results from indexed nlp results'
         }
     });
 

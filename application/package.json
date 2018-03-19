@@ -40,7 +40,10 @@
         "mongo-trigger": "^0.1.5",
         "async": "^2.2.0",
         "request-promise-native": "^1.0.3",
-        "progress":"^1.1.8"
+        "progress":"^1.1.8",
+        "solr-client": "^0.6.0",
+        "lodash": "^4.17.4"
+
     },
     "engines": {
         "node": ">=6.9.0"

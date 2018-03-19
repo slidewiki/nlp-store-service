@@ -5,11 +5,16 @@ const nlpService = require('../services/nlp'),
     nlpDB = require('../database/nlpDatabase'),
     async = require('async');
 
-function handleDeckUpdate(deckId){
-    // console.log('deck ' + deckId);
-    return nlpService.nlpForDeck(deckId).then( (nlpResult) => nlpDB.insert(nlpResult));
-}
+const solr = require('../lib/solrClient');
+const _ = require('lodash');
 
+function updateNLPForDeck(deckId){
+    return nlpService.nlpForDeck(deckId).then( (nlpResult) => {
+        return nlpDB.insert(nlpResult).then( () => {
+            return indexNLPResult(nlpResult);
+        });
+    });
+}
 
 function handleSlideUpdate(slideId){
     // console.log('slide ' + slideId);
@@ -25,7 +30,7 @@ function handleSlideUpdate(slideId){
 
         // update each parent deck in the usage set
         async.eachSeries(usageSet, (deckId, callback) => {
-            handleDeckUpdate(deckId).then( () => {
+            updateNLPForDeck(deckId).then( () => {
                 callback();
             }).catch( (err) => {
                 console.log('slide update: deck id ' + deckId + ' - NLP errored: ' + err.message);
@@ -35,5 +40,33 @@ function handleSlideUpdate(slideId){
     });
 }
 
+function indexNLPResult(result){
 
-module.exports = { handleDeckUpdate, handleSlideUpdate };
+    // expand named entities, spotlight entities and tokens according to their frequency
+    let namedEntities = result.NERFrequencies.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    let spotlightEntities = result.DBPediaSpotlightURIFrequencies.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    let tokens = result.wordFrequenciesExclStopwords.map( (item) => {
+        return _.fill(Array(item.frequency), item.entry);
+    });
+
+    // form solr doc and add it to solr
+    let doc = {
+        solr_id: `deck_${result.deckId}`,
+        _id: parseInt(result.deckId), 
+        namedentity: _.flatten(namedEntities),
+        spotlightentity: _.flatten(spotlightEntities),
+        token: _.flatten(tokens),
+        language: result.detectedLanguage
+    };
+    
+    return solr.add(doc);
+}
+
+
+module.exports = { updateNLPForDeck, handleSlideUpdate, indexNLPResult };
