@@ -6,6 +6,7 @@ Handles the requests by executing stuff and replying to the client. Uses promise
 
 const boom = require('boom');
 const nlpDB = require('../database/nlpDatabase');
+const solr = require('../lib/solrClient');
 
 module.exports = {
     
@@ -53,6 +54,45 @@ module.exports = {
             else{
                 reply(termFreq);
             }
+        }).catch( (err) => {
+            request.log('error', err);
+            reply(boom.badImplementation());
+        });
+    }, 
+
+    getNLPResults: function(request, reply){
+        // basic query
+        let query = `q=${request.payload.query}`;
+
+        // add language filter
+        if(request.payload.language){
+            query += `&fq=language:${request.payload.language}`;
+        }
+
+        // exclude deck ids
+        if(request.payload.excludeDeckIds){
+            let deckIdsToExclude = request.payload.excludeDeckIds.split(',').map( (deckId) => {
+                return `-_id:${parseInt(deckId)}`;
+            });
+            query += `&fq=${deckIdsToExclude.join(' AND ')}`;
+        }
+        
+        // return and filter only deck ids
+        query += `&fl=_id, score`;
+        
+        // pagination params
+        let start = (request.payload.page - 1) * request.payload.pageSize;
+        query += `&start=${start}&rows=${request.payload.pageSize}`;
+
+        solr.query(query, 'query').then( (solrResponse) => {
+            let response = solrResponse.response;
+
+            reply({
+                numFound: response.numFound, 
+                page: request.payload.page,
+                pageSize: request.payload.pageSize, 
+                items: response.docs
+            });
         }).catch( (err) => {
             request.log('error', err);
             reply(boom.badImplementation());

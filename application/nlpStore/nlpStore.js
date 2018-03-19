@@ -57,11 +57,12 @@ function indexNLPResult(result){
 
     // form solr doc and add it to solr
     let doc = {
-        solr_id: `deck_${result.deckId}`, 
+        solr_id: `deck_${result.deckId}`,
+        _id: parseInt(result.deckId), 
         namedentity: _.flatten(namedEntities),
         spotlightentity: _.flatten(spotlightEntities),
         token: _.flatten(tokens),
-        language: result.language
+        language: result.detectedLanguage
     };
     
     return solr.add(doc);

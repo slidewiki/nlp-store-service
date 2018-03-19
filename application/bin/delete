@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const solrClient = require('../lib/solrClient');
+
+solrClient.delete('*:*', true).then( (res) => {
+    console.log('NLP results are deleted from solr');
+}).catch( (error) => {
+    console.log(error.message);
+});
