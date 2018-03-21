@@ -62,11 +62,14 @@ module.exports = {
 
     getNLPResults: function(request, reply){
         // basic query
-        let query = `q=${request.payload.query}`;
+        let query = {};
+        query.q = request.payload.query;
 
+        query.fq = [];
+        
         // add language filter
         if(request.payload.language){
-            query += `&fq=language:${request.payload.language}`;
+            query.fq.push(`language:${request.payload.language}`);
         }
 
         // exclude deck ids
@@ -74,15 +77,16 @@ module.exports = {
             let deckIdsToExclude = request.payload.excludeDeckIds.split(',').map( (deckId) => {
                 return `-_id:${parseInt(deckId)}`;
             });
-            query += `&fq=${deckIdsToExclude.join(' AND ')}`;
+            query.fq.push(deckIdsToExclude.join(' AND '));
         }
         
         // return and filter only deck ids
-        query += '&fl=_id, score';
+        query.fl = '_id, score';
         
         // pagination params
         let start = (request.payload.page - 1) * request.payload.pageSize;
-        query += `&start=${start}&rows=${request.payload.pageSize}`;
+        query.start = start;
+        query.rows = request.payload.pageSize;
 
         solr.query(query, 'query').then( (solrResponse) => {
             let response = solrResponse.response;
