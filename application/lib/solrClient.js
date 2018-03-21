@@ -11,6 +11,7 @@ const solr = require('solr-client'),
         path: config.PATH,
         secure: (config.PROTOCOL === 'https')
     });
+const querystring = require('querystring');
 
 let self = module.exports = {
     add: function(data){
@@ -29,7 +30,8 @@ let self = module.exports = {
         client.commit();
     },
 
-    query: function(queryString, requestHandler){
+    query: function(queryParams, requestHandler){
+        let queryString = querystring.stringify(queryParams);
         let requestUri = `${solrUri}/${requestHandler}?${queryString}`;
 
         // console.log(requestUri);
