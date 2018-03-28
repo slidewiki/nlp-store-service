@@ -57,6 +57,24 @@ module.exports = function(server) {
     });
 
     server.route({
+        method: 'GET',
+        path: '/statistics/tf_df/{deckId}',
+        handler: handlers.getTfDf,
+        config: {
+            validate: {
+                params: {
+                    deckId: Joi.string()
+                },
+                query: {
+                    minForLanguageDependent: Joi.number().integer().positive().default(100).description('Min deck count to choose language dependent frequencies'), 
+                }
+            },
+            tags: ['api'],
+            description: 'Retrieve term frequencies for single deck'
+        }
+    });
+
+    server.route({
         method: 'POST',
         path: '/nlp/query',
         handler: handlers.getNLPResults,

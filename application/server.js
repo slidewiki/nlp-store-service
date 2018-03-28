@@ -14,7 +14,7 @@ const decksListener = require('./mongoListeners/deckListener'),
     slidesListerner = require('./mongoListeners/slideListener');
 
 //Initiate the webserver with standard or given port
-const server = new hapi.Server({ connections: {routes: {validate: { options: {convert : false}}}}});
+const server = new hapi.Server();
 
 let port = (!co.isEmpty(process.env.APPLICATION_PORT)) ? process.env.APPLICATION_PORT : 3000;
 server.connection({

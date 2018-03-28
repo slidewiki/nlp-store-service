@@ -7,6 +7,7 @@ Handles the requests by executing stuff and replying to the client. Uses promise
 const boom = require('boom');
 const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
+const util = require('../lib/util');
 
 module.exports = {
     
@@ -54,6 +55,32 @@ module.exports = {
             else{
                 reply(termFreq);
             }
+        }).catch( (err) => {
+            request.log('error', err);
+            reply(boom.badImplementation());
+        });
+    }, 
+
+    getTfDf: function(request, reply){
+        let deckId = request.params.deckId;
+
+        nlpDB.get(deckId).then( (nlpResult) => {
+            if(!nlpResult) return reply(boom.notFound());
+
+            return solr.countDecks().then( (deckCount) => {
+                return solr.countDecks(nlpResult.detectedLanguage).then( (deckCountForLang) => {
+                    return solr.getTermVectors(deckId).then( (termVectors) => {
+                        let languageFilter = (deckCountForLang > request.query.minForLanguageDependent) ? true : false;
+                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter);
+                        response.language = nlpResult.detectedLanguage;
+                        response.numberOfDecksInPlatformWithGivenLanguage = deckCountForLang;
+                        response.numberOfDecksInPlatformOverall = deckCount;
+                        response.tfidfValuesWereCalculatedLanguageDependent = languageFilter;
+
+                        reply(response);
+                    });
+                });
+            });            
         }).catch( (err) => {
             request.log('error', err);
             reply(boom.badImplementation());

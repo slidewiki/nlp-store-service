@@ -46,22 +46,34 @@ function indexNLPResult(result){
     let namedEntities = result.NERFrequencies.map( (item) => {
         return _.fill(Array(item.frequency), item.entry);
     });
+    namedEntities = _.flatten(namedEntities);
+
+    let namedEntitiesWithLang = namedEntities.map( (item) => `${item}_${result.detectedLanguage}`);
+    namedEntities = namedEntities.concat(namedEntitiesWithLang);
 
     let spotlightEntities = result.DBPediaSpotlightURIFrequencies.map( (item) => {
         return _.fill(Array(item.frequency), item.entry);
     });
+    spotlightEntities = _.flatten(spotlightEntities);
+
+    let spotlightEntitiesWithLang = spotlightEntities.map( (item) => `${item}_${result.detectedLanguage}`);
+    spotlightEntities = spotlightEntities.concat(spotlightEntitiesWithLang);
 
     let tokens = result.wordFrequenciesExclStopwords.map( (item) => {
         return _.fill(Array(item.frequency), item.entry);
     });
+    tokens = _.flatten(tokens);
+
+    let tokensWithLang = tokens.map( (item) => `${item}_${result.detectedLanguage}`);
+    tokens = tokens.concat(tokensWithLang);
 
     // form solr doc and add it to solr
     let doc = {
         solr_id: `deck_${result.deckId}`,
         _id: parseInt(result.deckId), 
-        namedentity: _.flatten(namedEntities),
-        spotlightentity: _.flatten(spotlightEntities),
-        token: _.flatten(tokens),
+        namedentity: namedEntities,
+        spotlightentity: spotlightEntities,
+        token: tokens,
         language: result.detectedLanguage
     };
     

@@ -47,4 +47,31 @@ let self = module.exports = {
             uri: `${solrUri}/update?stream.body=<delete><query>${query}</query></delete>&commit=${commit}`
         });
     }, 
+
+    getTermVectors: function(deckId){
+        // params for term-vector component
+        // requesting term-vectors for field: token, namedentity and spotlightentity
+        let query = {
+            q: `solr_id:deck_${deckId}`, 
+            rows: 1, 
+            indent: false, 
+            tv: true, 
+            'tv.tf': true, 
+            'tv.df': true, 
+            'tv.fl': ['token', 'namedentity', 'spotlightentity'], 
+            fl: 'solr_id', 
+            'json.nl': 'map'
+        };
+        return this.query(query, 'tvrh').then( (response) => response.termVectors[`deck_${deckId}`]);
+    }, 
+
+    countDecks: function(language){
+        let query = {};
+        query.q = '*:*';
+        query.fl = 'solr_id';
+
+        if(language) query.fq = `language:${language}`;
+        
+        return this.query(query, 'select').then( (response) => response.response.numFound);
+    }, 
 };
