@@ -63,6 +63,7 @@ module.exports = {
 
     getTfDf: function(request, reply){
         let deckId = request.params.deckId;
+        let minFreq = request.query.minFrequencyOfTermOrEntityToBeConsidered;
 
         nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult) return reply(boom.notFound());
@@ -71,7 +72,7 @@ module.exports = {
                 return solr.countDecks(nlpResult.detectedLanguage).then( (deckCountForLang) => {
                     return solr.getTermVectors(deckId).then( (termVectors) => {
                         let languageFilter = (deckCountForLang > request.query.minForLanguageDependent) ? true : false;
-                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter);
+                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter, minFreq);
                         response.language = nlpResult.detectedLanguage;
                         response.docsForLanguage = deckCountForLang;
                         response.totalDocs = deckCount;

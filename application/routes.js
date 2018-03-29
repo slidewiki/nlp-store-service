@@ -66,7 +66,8 @@ module.exports = function(server) {
                     deckId: Joi.string()
                 },
                 query: {
-                    minForLanguageDependent: Joi.number().integer().positive().default(100).description('Min deck count to choose language dependent frequencies'), 
+                    minForLanguageDependent: Joi.number().integer().positive().default(100).description('Min deck count to choose language dependent frequencies'),
+                    minFrequencyOfTermOrEntityToBeConsidered: Joi.number().integer().positive().default(2).description('Min frequency to be returned'),
                 }
             },
             tags: ['api'],
