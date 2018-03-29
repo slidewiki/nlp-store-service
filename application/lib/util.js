@@ -10,16 +10,16 @@ let self = module.exports = {
 
         let tokens = Object.keys(termVectors.token || []);
         let tfidf = {};
-        tfidf.token = {};
-        tfidf.token = parseFunc(tokens, langSuffix, termVectors.token);
+        tfidf.wordFrequenciesExclStopwords = {};
+        tfidf.wordFrequenciesExclStopwords = parseFunc(tokens, langSuffix, termVectors.token);
 
         let spotlightentities = Object.keys(termVectors.spotlightentity || []);
-        tfidf.spotlightentity = {};
-        tfidf.spotlightentity = parseFunc(spotlightentities, langSuffix, termVectors.spotlightentity);
+        tfidf.DBPediaSpotlightURIFrequencies = {};
+        tfidf.DBPediaSpotlightURIFrequencies = parseFunc(spotlightentities, langSuffix, termVectors.spotlightentity);
         
         let namedentities = Object.keys(termVectors.namedentity || []);
-        tfidf.namedentity = {};
-        tfidf.namedentity = parseFunc(namedentities, langSuffix, termVectors.namedentity);
+        tfidf.NERFrequencies = {};
+        tfidf.NERFrequencies = parseFunc(namedentities, langSuffix, termVectors.namedentity);
 
         return tfidf;    
     },
@@ -29,8 +29,8 @@ let self = module.exports = {
         .map( (item) => {
             return {
                 entry: this.removeSuffix(item),
-                tf: termVectorsForField[item].tf, 
-                df: termVectorsForField[item].df 
+                frequency: termVectorsForField[item].tf, 
+                frequencyOtherDecks: termVectorsForField[item].df 
             };
         });
     }, 

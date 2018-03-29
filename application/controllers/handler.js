@@ -73,9 +73,12 @@ module.exports = {
                         let languageFilter = (deckCountForLang > request.query.minForLanguageDependent) ? true : false;
                         let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter);
                         response.language = nlpResult.detectedLanguage;
-                        response.numberOfDecksInPlatformWithGivenLanguage = deckCountForLang;
-                        response.numberOfDecksInPlatformOverall = deckCount;
-                        response.tfidfValuesWereCalculatedLanguageDependent = languageFilter;
+                        response.docsForLanguage = deckCountForLang;
+                        response.totalDocs = deckCount;
+                        response.languageDependent = languageFilter;
+                        response.frequencyOfMostFrequentWord = nlpResult.frequencyOfMostFrequentWord;
+                        response.numberOfSlides = nlpResult.numberOfSlides;
+                        response.numberOfSlidesWithText = nlpResult.numberOfSlidesWithText;
 
                         reply(response);
                     });
