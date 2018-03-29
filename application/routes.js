@@ -58,7 +58,7 @@ module.exports = function(server) {
 
     server.route({
         method: 'GET',
-        path: '/statistics/tf_df/{deckId}',
+        path: '/statistics/termFrequencies/v2/{deckId}',
         handler: handlers.getTfDf,
         config: {
             validate: {
@@ -70,7 +70,7 @@ module.exports = function(server) {
                 }
             },
             tags: ['api'],
-            description: 'Retrieve term frequencies for single deck'
+            description: 'Retrieve term frequencies for single deck from solr'
         }
     });
 
