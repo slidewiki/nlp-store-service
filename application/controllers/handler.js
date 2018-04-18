@@ -8,13 +8,23 @@ const boom = require('boom');
 const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
 const util = require('../lib/util');
+const nlpStore = require('../nlpStore/nlpStore');
 
 module.exports = {
     
     getDeckNLP: function(request, reply){
-        nlpDB.get(request.params.deckId).then( (nlpResult) => {
+        let deckId = request.params.deckId;
+        nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult){
-                reply(boom.notFound());
+                // if nlp result is not already stored, compute it now
+                return nlpStore.updateNLPForDeck(deckId).then( () => {
+                    return nlpDB.get(deckId).then( (nlpResult) => {
+                        if(!nlpResult)
+                            reply(boom.notFound());
+                        else 
+                            reply(nlpResult);
+                    });
+                });
             }
             else{
                 reply(nlpResult);
@@ -72,7 +82,7 @@ module.exports = {
                 return solr.countDecks(nlpResult.detectedLanguage).then( (deckCountForLang) => {
                     return solr.getTermVectors(deckId).then( (termVectors) => {
                         let languageFilter = (deckCountForLang > request.query.minForLanguageDependent) ? true : false;
-                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter, minFreq);
+                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter, minFreq, nlpResult);
                         response.language = nlpResult.detectedLanguage;
                         response.docsForLanguage = deckCountForLang;
                         response.totalDocs = deckCount;

@@ -52,7 +52,7 @@ module.exports = function(server) {
                 }
             },
             tags: ['api'],
-            description: 'Retrieve term frequencies for single deck'
+            description: 'Retrieve term frequencies for single deck #DEPRECATED'
         }
     });
 
