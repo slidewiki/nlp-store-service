@@ -7,6 +7,7 @@ const nlpService = require('../services/nlp'),
 
 const solr = require('../lib/solrClient');
 const _ = require('lodash');
+const util = require('../lib/util');
 
 function updateNLPForDeck(deckId){
     return nlpService.nlpForDeck(deckId).then( (nlpResult) => {
@@ -80,5 +81,25 @@ function indexNLPResult(result){
     return solr.add(doc);
 }
 
+function computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent){
+    return solr.countDecks().then( (deckCount) => {
+        return solr.countDecks(nlpResult.detectedLanguage).then( (deckCountForLang) => {
+            return solr.getTermVectors(deckId).then( (termVectors) => {
+                let languageFilter = (deckCountForLang > minForLanguageDependent) ? true : false;
+                let tfdf = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter, minFreq, nlpResult);
+                tfdf.language = nlpResult.detectedLanguage;
+                tfdf.docsForLanguage = deckCountForLang;
+                tfdf.totalDocs = deckCount;
+                tfdf.languageDependent = languageFilter;
+                tfdf.frequencyOfMostFrequentWord = nlpResult.frequencyOfMostFrequentWord;
+                tfdf.numberOfSlides = nlpResult.numberOfSlides;
+                tfdf.numberOfSlidesWithText = nlpResult.numberOfSlidesWithText;
 
-module.exports = { updateNLPForDeck, handleSlideUpdate, indexNLPResult };
+                return tfdf;
+            });
+        });
+    });  
+}
+
+
+module.exports = { updateNLPForDeck, handleSlideUpdate, indexNLPResult, computeTfDf };

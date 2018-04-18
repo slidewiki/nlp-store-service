@@ -74,27 +74,36 @@ module.exports = {
     getTfDf: function(request, reply){
         let deckId = request.params.deckId;
         let minFreq = request.query.minFrequencyOfTermOrEntityToBeConsidered;
+        let minForLanguageDependent = request.query.minForLanguageDependent;
 
         nlpDB.get(deckId).then( (nlpResult) => {
-            if(!nlpResult) return reply(boom.notFound());
-
-            return solr.countDecks().then( (deckCount) => {
-                return solr.countDecks(nlpResult.detectedLanguage).then( (deckCountForLang) => {
-                    return solr.getTermVectors(deckId).then( (termVectors) => {
-                        let languageFilter = (deckCountForLang > request.query.minForLanguageDependent) ? true : false;
-                        let response = util.getTfDf(termVectors, nlpResult.detectedLanguage, deckId, languageFilter, minFreq, nlpResult);
-                        response.language = nlpResult.detectedLanguage;
-                        response.docsForLanguage = deckCountForLang;
-                        response.totalDocs = deckCount;
-                        response.languageDependent = languageFilter;
-                        response.frequencyOfMostFrequentWord = nlpResult.frequencyOfMostFrequentWord;
-                        response.numberOfSlides = nlpResult.numberOfSlides;
-                        response.numberOfSlidesWithText = nlpResult.numberOfSlidesWithText;
-
-                        reply(response);
+            if(!nlpResult){
+                // if nlp result is not already stored, compute it now
+                nlpStore.updateNLPForDeck(deckId).then( () => {
+                    return nlpDB.get(deckId).then( (nlpResult) => {
+                        if(!nlpResult){
+                            return reply(boom.notFound());
+                        }
+                        else 
+                            return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
+                            .then( (response) => {
+                                reply(response);
+                            }); 
                     });
+                }).catch( (err) => {
+                    if(err.statusCode === 404){
+                        return reply(boom.notFound());
+                    }else{
+                        request.log('error', err);
+                        return reply(boom.badImplementation()); 
+                    }
                 });
-            });            
+            }else{
+                return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
+                .then( (response) => {
+                    reply(response);
+                }); 
+            }      
         }).catch( (err) => {
             request.log('error', err);
             reply(boom.badImplementation());
