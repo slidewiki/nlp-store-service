@@ -21,10 +21,12 @@
         "countLOC": "sloc -f cli-table -k total,source,comment,empty -e node_modules\\|coverage ./",
         "countLOC:details": "sloc -f cli-table -d -e node_modules\\|coverage ./",
         "start:watch": "nodemon",
+        "worker:watch": "JOB_TYPES=nlp_update nodemon worker.js",
         "start:mongodb": "docker run -d --name mongotest -p 27018:27017 mongo",
         "stop:mongodb": "docker stop mongotest && docker rm mongotest"
     },
     "dependencies": {
+        "agenda": "^1.0.3",
         "ajv": "^4.11.0",
         "boom": "^4.2.0",
         "database-cleaner": "^1.2.0",

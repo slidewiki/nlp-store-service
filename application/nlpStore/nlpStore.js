@@ -8,6 +8,13 @@ const nlpService = require('../services/nlp'),
 const solr = require('../lib/solrClient');
 const _ = require('lodash');
 const util = require('../lib/util');
+const agenda = require('../lib/agenda');
+
+function queueUpdate(deckId){
+    return promisify(agenda.now).bind(agenda)('nlp_update', {
+        deckId
+    });
+}
 
 function updateNLPForDeck(deckId){
     return nlpService.nlpForDeck(deckId).then( (nlpResult) => {
@@ -15,6 +22,10 @@ function updateNLPForDeck(deckId){
             return indexNLPResult(nlpResult);
         });
     });
+}
+
+function handleDeckUpdate(deckId){
+    return queueUpdate(deckId);
 }
 
 function handleSlideUpdate(slideId){
@@ -29,15 +40,19 @@ function handleSlideUpdate(slideId){
             });
         }
 
-        // update each parent deck in the usage set
-        async.eachSeries(usageSet, (deckId, callback) => {
-            updateNLPForDeck(deckId).then( () => {
-                callback();
-            }).catch( (err) => {
-                console.log('slide update: deck id ' + deckId + ' - NLP errored: ' + err.message);
-                callback();
-            });
+        usageSet.forEach( (deckId) => {
+            queueUpdate(deckId);
         });
+        
+        // // update each parent deck in the usage set
+        // async.eachSeries(usageSet, (deckId, callback) => {
+        //     updateNLPForDeck(deckId).then( () => {
+        //         callback();
+        //     }).catch( (err) => {
+        //         console.log('slide update: deck id ' + deckId + ' - NLP errored: ' + err.message);
+        //         callback();
+        //     });
+        // });
     });
 }
 
@@ -102,4 +117,4 @@ function computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent){
 }
 
 
-module.exports = { updateNLPForDeck, handleSlideUpdate, indexNLPResult, computeTfDf };
+module.exports = { updateNLPForDeck, handleDeckUpdate, handleSlideUpdate, indexNLPResult, computeTfDf };
