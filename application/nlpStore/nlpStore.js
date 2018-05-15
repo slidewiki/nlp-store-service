@@ -8,51 +8,12 @@ const nlpService = require('../services/nlp'),
 const solr = require('../lib/solrClient');
 const _ = require('lodash');
 const util = require('../lib/util');
-const agenda = require('../lib/agenda');
-
-function queueUpdate(deckId){
-    return promisify(agenda.now).bind(agenda)('nlp_update', {
-        deckId
-    });
-}
 
 function updateNLPForDeck(deckId){
     return nlpService.nlpForDeck(deckId).then( (nlpResult) => {
         return nlpDB.insert(nlpResult).then( () => {
             return indexNLPResult(nlpResult);
         });
-    });
-}
-
-function handleDeckUpdate(deckId){
-    return queueUpdate(deckId);
-}
-
-function handleSlideUpdate(slideId){
-    // console.log('slide ' + slideId);
-    return deckService.getSlide(slideId).then( (slide) => {
-
-        // find usage set of all slide revisions
-        let usageSet = new Set();
-        for(let i in slide.revisions){
-            slide.revisions[i].usage.forEach( (u) => {
-                usageSet.add(u.id);
-            });
-        }
-
-        usageSet.forEach( (deckId) => {
-            queueUpdate(deckId);
-        });
-        
-        // // update each parent deck in the usage set
-        // async.eachSeries(usageSet, (deckId, callback) => {
-        //     updateNLPForDeck(deckId).then( () => {
-        //         callback();
-        //     }).catch( (err) => {
-        //         console.log('slide update: deck id ' + deckId + ' - NLP errored: ' + err.message);
-        //         callback();
-        //     });
-        // });
     });
 }
 
@@ -117,4 +78,4 @@ function computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent){
 }
 
 
-module.exports = { updateNLPForDeck, handleDeckUpdate, handleSlideUpdate, indexNLPResult, computeTfDf };
+module.exports = { updateNLPForDeck, indexNLPResult, computeTfDf };

@@ -1,7 +1,7 @@
 'use strict';
 
 const MongoStream = require('mongo-trigger'),
-    nlpStore = require('../nlpStore/nlpStore'),
+    handler = require('../controllers/handler'),
     mongoConfig = require('../configuration').MongoDB;
 
 module.exports = {
@@ -21,13 +21,13 @@ module.exports = {
 
             switch(event.operation){
                 case 'insert':
-                    nlpStore.handleDeckUpdate(event.data._id).catch( (err) => {
-                        console.log('deck listener: deck ' + event.data._id + ' - ' + err.message);
+                    handler.update('deck', event.data._id).catch( (err) => {
+                        console.warn('deck listener: deck ' + event.data._id + ' - ' + err.message);
                     });
                     break;
                 case 'update':
-                    nlpStore.handleDeckUpdate(event.targetId).catch( (err) => {
-                        console.log('deck listener: deck ' + event.targetId + ' - ' + err.message);
+                    handler.update('deck', event.targetId).catch( (err) => {
+                        console.warn('deck listener: deck ' + event.targetId + ' - ' + err.message);
                     });
                     break;
             }

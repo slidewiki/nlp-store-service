@@ -9,9 +9,11 @@ module.exports = {
 
     nlpForDeck: function(deckId){
         return rp.get({
-            uri: Microservices.nlp.uri + '/nlp/nlpForDeck/' + deckId +
-                '?dbpediaSpotlightConfidenceForSlide=' + slideConfidence +
-                '&dbpediaSpotlightConfidenceForDeck=' + deckConfidence,
+            uri: Microservices.nlp.uri + '/nlp/nlpForDeck/' + deckId, 
+            qs: {
+            	dbpediaSpotlightConfidenceForSlide: slideConfidence, 
+            	dbpediaSpotlightConfidenceForDeck: deckConfidence
+            },
             json: true,
         });
     }

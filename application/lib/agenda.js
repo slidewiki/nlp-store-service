@@ -9,7 +9,7 @@ let connectionString = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.S
 let agenda = new Agenda({
     db: {
         address: connectionString,
-        collection: 'jobs',
+        collection: 'nlpJobs',
     },
 });
 
