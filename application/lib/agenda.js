@@ -37,7 +37,7 @@ if (jobTypes.length) {
     });
     agenda.on('fail', (err, job) => {
         console.warn('Job %s for deck %s failed', job.attrs.name, job.attrs.data.deckId);
-        console.warn(err);
+        console.warn(err.message);
     });
 }
 

@@ -1,0 +1,40 @@
+#!/usr/bin/env node
+
+'use strict';
+
+const deckDB = require('../database/deckDatabase');
+const saveJob = require('../lib/saveJob');
+const ProgressBar = require('progress');
+
+async function init(){
+    let limit = 100;
+    let allowErrors = 100;
+    
+    let totalCount = await deckDB.getTotalCount();
+    console.log(`Started creating jobs for ${totalCount} decks`);
+    let progressBar = new ProgressBar('Progress [:bar] :percent', { total: totalCount });
+
+    for (let offset = 0; offset <= totalCount; offset += limit) {
+        let deckIds = await deckDB.getAllIds(offset, limit, {_id:1});
+        for (let deck of deckIds) {
+            progressBar.tick();
+
+            try {
+                await saveJob('nlpUpdate', { 
+                    deckId: deck._id
+                });
+            } catch (e) {
+                console.warn(e.message);
+            }
+        }
+    }
+}
+
+
+init().then( (res) => {
+    console.log(res);
+    process.exit(0);
+}).catch( (err) => {
+    console.log(err);
+    process.exit(-1);
+});

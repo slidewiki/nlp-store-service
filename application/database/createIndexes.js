@@ -8,13 +8,24 @@ const helper = require('./helper');
 // it should always return a promise
 module.exports = function() {
 
-    // SAMPLE CODE
-    return helper.getCollection('decks').then((decks) => {
+    let nlpIndexes = helper.getCollection('nlp').then((decks) => {
         return decks.createIndexes([
-            { key: {'revisions.contentItems.ref.id': 1} },
-            { key: {'revisions.contentItems.ref.revision': 1} },
-            { key: {'revisions.contentItems.kind': 1} },
+            { key: {'deckId': 1} },
+            { key: {'detectedLanguage': 1} },
+            { key: {'wordFrequenciesExclStopwords.entry': 1} },
+            { key: {'NERFrequencies.entry': 1} },
+            { key: {'DBPediaSpotlightURIFrequencies.entry': 1} },
+            { key: {'data.deckId' : 1} },
         ]);
     });
+
+
+    let agendaIndexes = helper.getCollection('agendaJobs').then((decks) => {
+        return decks.createIndexes([
+            { key: {'data.deckId' : 1} },
+        ]);
+    });
+
+    return Promise.all([nlpIndexes, agendaIndexes]);
 
 };

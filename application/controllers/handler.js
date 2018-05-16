@@ -10,9 +10,7 @@ const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
 const util = require('../lib/util');
 const nlpStore = require('../nlpStore/nlpStore');
-const { promisify } = require('util');
 const deckService = require('../services/deck');
-const agenda = require('../lib/agenda');
 
 module.exports = {
     
@@ -156,28 +154,5 @@ module.exports = {
             reply(boom.badImplementation());
         });
     }, 
-
-    update: async function(type, id) {
-        let deepUsage = await deckService.getDeepUsage(type, id);
-
-        let deckIds = deepUsage.map( (item) => item.id);
-        
-        if(type === 'deck'){
-            // add own deck id to the decks that need to be updated
-            // hint: /deck/:id/deepUsage doesn't include self
-            deckIds.push(id);
-        }
-
-        try {
-            for (let deckId of deckIds) {
-                // add a new job foreach deck in the path till the root deck
-                await promisify(agenda.now).bind(agenda)('nlpUpdate', {
-                    deckId
-                });
-            }
-        } catch(err) {
-            console.warn(err.message);
-        }
-    },
 
 };

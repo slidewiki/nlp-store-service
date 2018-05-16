@@ -12,9 +12,9 @@ module.exports = {
         });
     }, 
 
-    getDeepUsage: function(type, id){
+    getDeckDeepUsage: function(id){
         return rp.get({
-            uri: `${Microservices.deck.uri}/${type}/${id}/deepUsage`,
+            uri: `${Microservices.deck.uri}/deck/${id}/deepUsage`,
             json: true,
         });
     }
