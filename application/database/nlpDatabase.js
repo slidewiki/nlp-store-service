@@ -144,27 +144,27 @@ function getTermFrequencies(deckId){
         let words = nlpResult.wordFrequenciesExclStopwords.map( (item) => { return item.entry; });
         promises.push(
             getAggregateCounts('wordFrequenciesExclStopwords', deckId, words, nlpResult.detectedLanguage)
-            .then( (wordFreq) => {
-                frequencies.wordFrequenciesExclStopwords = wordFreq;
-            })
+                .then( (wordFreq) => {
+                    frequencies.wordFrequenciesExclStopwords = wordFreq;
+                })
         );
 
         // compute total  frequencies for NERFrequencies
         let namedEntities = nlpResult.NERFrequencies.map( (item) => { return item.entry; });
         promises.push(
             getAggregateCounts('NERFrequencies', deckId, namedEntities, nlpResult.detectedLanguage)
-            .then( (namedEntitiesFreq) => {
-                frequencies.NERFrequencies = namedEntitiesFreq;
-            })
+                .then( (namedEntitiesFreq) => {
+                    frequencies.NERFrequencies = namedEntitiesFreq;
+                })
         );
 
         // compute total  frequencies for DBPediaSpotlightURIFrequencies
         let spotlightEntities = nlpResult.DBPediaSpotlightURIFrequencies.map( (item) => { return item.entry; });
         promises.push(
             getAggregateCounts('DBPediaSpotlightURIFrequencies', deckId, spotlightEntities, nlpResult.detectedLanguage)
-            .then( (spotlightEntitiesFreq) => {
-                frequencies.DBPediaSpotlightURIFrequencies = spotlightEntitiesFreq;
-            })
+                .then( (spotlightEntitiesFreq) => {
+                    frequencies.DBPediaSpotlightURIFrequencies = spotlightEntitiesFreq;
+                })
         );
 
         // compute number all docs
@@ -177,9 +177,9 @@ function getTermFrequencies(deckId){
         // compute number of docs with the specific language
         promises.push(
             getCount({ 'detectedLanguage': nlpResult.detectedLanguage })
-            .then( (countForLang) => {
-                frequencies.docsForLanguage = countForLang;
-            })
+                .then( (countForLang) => {
+                    frequencies.docsForLanguage = countForLang;
+                })
         );
 
         return Promise.all(promises).then( () => {

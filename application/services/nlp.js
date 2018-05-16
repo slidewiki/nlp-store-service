@@ -11,8 +11,8 @@ module.exports = {
         return rp.get({
             uri: Microservices.nlp.uri + '/nlp/nlpForDeck/' + deckId, 
             qs: {
-            	dbpediaSpotlightConfidenceForSlide: slideConfidence, 
-            	dbpediaSpotlightConfidenceForDeck: deckConfidence
+                dbpediaSpotlightConfidenceForSlide: slideConfidence, 
+                dbpediaSpotlightConfidenceForDeck: deckConfidence
             },
             json: true,
         });

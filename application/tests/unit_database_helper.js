@@ -1,4 +1,5 @@
 // example unit tests
+/* eslint promise/no-callback-in-promise: "off" */
 'use strict';
 
 //Mocking is missing completely TODO add mocked objects
@@ -15,8 +16,8 @@ describe('Database', () => {
         let chaiAsPromised = require('chai-as-promised');
         chai.use(chaiAsPromised);
         helper.cleanDatabase(tempDatabase)
-        .then(() => done())
-        .catch((error) => done(error));
+            .then(() => done())
+            .catch((error) => done(error));
     });
 
     context('when connecting to an existing database', () => {
@@ -27,7 +28,7 @@ describe('Database', () => {
                 db.should.be.fulfilled,
                 db.should.eventually.not.be.empty,
                 db.should.eventually.have.property('s').that.is.not.empty,
-                db.should.eventually.have.deep.property('s.databaseName', 'local')
+                db.should.eventually.have.property('s').that.has.property('databaseName', 'local')
             ]);
         });
 

@@ -1,6 +1,7 @@
 /*
 Handles the requests by executing stuff and replying to the client. Uses promises to get stuff done.
 */
+/* eslint promise/always-return: "off" */
 
 'use strict';
 
@@ -11,7 +12,6 @@ const util = require('../lib/util');
 const nlpStore = require('../nlpStore/nlpStore');
 const { promisify } = require('util');
 const deckService = require('../services/deck');
-const async = require('async');
 const agenda = require('../lib/agenda');
 
 module.exports = {
@@ -90,9 +90,9 @@ module.exports = {
                         }
                         else 
                             return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
-                            .then( (response) => {
-                                reply(response);
-                            }); 
+                                .then( (response) => {
+                                    reply(response);
+                                }); 
                     });
                 }).catch( (err) => {
                     if(err.statusCode === 404){
@@ -104,9 +104,9 @@ module.exports = {
                 });
             }else{
                 return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
-                .then( (response) => {
-                    reply(response);
-                }); 
+                    .then( (response) => {
+                        reply(response);
+                    });
             }      
         }).catch( (err) => {
             request.log('error', err);
@@ -157,27 +157,27 @@ module.exports = {
         });
     }, 
 
-    update: function(type, id){
-        return deckService.getDeepUsage(type, id).then( (deepUsage) => {
-            let deckIds = deepUsage.map( (item) => item.id);
-            
-            if(type === 'deck'){
-                // add own deck id to the decks that need to be updated
-                // hint: /deck/:id/deepUsage doesn't include self
-                deckIds.push(id);
-            }
+    update: async function(type, id) {
+        let deepUsage = await deckService.getDeepUsage(type, id);
 
-            async.eachSeries(deckIds, (deckId, callback) => {
-                
+        let deckIds = deepUsage.map( (item) => item.id);
+        
+        if(type === 'deck'){
+            // add own deck id to the decks that need to be updated
+            // hint: /deck/:id/deepUsage doesn't include self
+            deckIds.push(id);
+        }
+
+        try {
+            for (let deckId of deckIds) {
                 // add a new job foreach deck in the path till the root deck
-                promisify(agenda.now).bind(agenda)('nlpUpdate', {
+                await promisify(agenda.now).bind(agenda)('nlpUpdate', {
                     deckId
-                }).then(callback)
-                .catch( (err) => callback);
-            }, (err) => {
-                if(err)
-                    console.warn(err.message);
-            });
-        });
-    }
+                });
+            }
+        } catch(err) {
+            console.warn(err.message);
+        }
+    },
+
 };
