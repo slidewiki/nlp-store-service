@@ -73,7 +73,22 @@ console.log();
 
 check(solrConfig);
 
+let agendaJobsCollection = (!co.isEmpty(process.env.AGENDA_JOBS_COLLECTION)) ? process.env.AGENDA_JOBS_COLLECTION : 'agendaJobs';
+let agendaMaxConcurrency = (!co.isEmpty(process.env.AGENDA_MAX_CONCURRENCY)) ? process.env.AGENDA_MAX_CONCURRENCY : 2;
+
+let agendaConfig = {
+    AGENDA_JOBS_COLLECTION: agendaJobsCollection, 
+    AGENDA_MAX_CONCURRENCY: agendaMaxConcurrency,
+};
+
+check(agendaConfig);
+
+console.log('#=========================== SOLR CONFIG ===========================#');
+console.log(JSON.stringify(agendaConfig, null, 4));
+console.log();
+
 module.exports = {
     MongoDB: mongoConfig, 
-    solrConfig: solrConfig
+    solrConfig: solrConfig, 
+    agendaConfig: agendaConfig,
 };

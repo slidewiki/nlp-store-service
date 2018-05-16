@@ -10,8 +10,7 @@ const hapi = require('hapi'),
     co = require('./common');
 
 // register mongo listeners
-const decksListener = require('./mongoListeners/deckListener'),
-    slidesListerner = require('./mongoListeners/slideListener');
+const decksListener = require('./mongoListeners/deckListener');
 
 //Initiate the webserver with standard or given port
 const server = new hapi.Server();
@@ -63,7 +62,6 @@ let plugins = [
 
 // start listening to mongo changes
 decksListener.listen();
-slidesListerner.listen();
 
 const createIndexes = require('./database/createIndexes');
 

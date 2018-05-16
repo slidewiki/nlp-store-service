@@ -2,6 +2,7 @@
 
 const Agenda = require('agenda');
 const dbConfig = require('../configuration').MongoDB;
+const { agendaConfig } = require('../configuration');
 
 // TODO maybe use another database as this is only transient persistance ?
 let connectionString = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.SLIDEWIKIDATABASE}`;
@@ -9,8 +10,9 @@ let connectionString = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.S
 let agenda = new Agenda({
     db: {
         address: connectionString,
-        collection: 'nlpJobs',
+        collection: agendaConfig.AGENDA_JOBS_COLLECTION,
     },
+    maxConcurrency: agendaConfig.AGENDA_MAX_CONCURRENCY,
 });
 
 let jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];
