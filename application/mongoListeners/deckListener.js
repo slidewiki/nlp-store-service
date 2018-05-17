@@ -1,10 +1,8 @@
 'use strict';
 
-const MongoStream = require('mongo-trigger'),
-    mongoConfig = require('../configuration').MongoDB;
-const agenda = require('agenda');
+const MongoStream = require('mongo-trigger');
+const mongoConfig = require('../configuration').MongoDB;
 const deckService = require('../services/deck');
-// const { promisify } = require('util');
 const saveJob = require('../lib/saveJob');
 
 async function queueUpdate(id) {

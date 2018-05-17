@@ -1,10 +1,7 @@
 'use strict';
 
-const nlpService = require('../services/nlp'),
-    deckService = require('../services/deck'),
-    nlpDB = require('../database/nlpDatabase'),
-    async = require('async');
-
+const nlpService = require('../services/nlp');
+const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
 const _ = require('lodash');
 const util = require('../lib/util');

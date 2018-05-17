@@ -8,9 +8,7 @@ Handles the requests by executing stuff and replying to the client. Uses promise
 const boom = require('boom');
 const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
-const util = require('../lib/util');
 const nlpStore = require('../nlpStore/nlpStore');
-const deckService = require('../services/deck');
 
 module.exports = {
     
