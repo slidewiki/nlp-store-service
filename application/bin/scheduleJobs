@@ -25,9 +25,14 @@ async function init(){
                 });
             } catch (e) {
                 console.warn(e.message);
+                if (--allowErrors === 0) {
+                    throw new Error('Too many errors, please check the configuration and try again');
+                }
             }
         }
     }
+
+    return 'Jobs scheduled successfully';
 }
 
 
