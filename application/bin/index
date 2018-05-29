@@ -53,7 +53,7 @@ function init(){
                     if(err)
                         reject(err);
                     else 
-                        resolve(`Initial index of NLP results has been completed`); 
+                        resolve('Initial index of NLP results has been completed'); 
                 }
             );
         });
