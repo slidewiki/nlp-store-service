@@ -4,6 +4,14 @@ const Agenda = require('agenda');
 const dbConfig = require('../configuration').MongoDB;
 const { agendaConfig } = require('../configuration');
 
+// graceful stop so as to unlock currently running jobs
+function gracefulStop() {
+    console.log('Agenda gracefully stopped');
+    agenda.stop( () => {
+        process.exit(0);
+    });
+}
+
 // TODO maybe use another database as this is only transient persistance ?
 let connectionString = `mongodb://${dbConfig.HOST}:${dbConfig.PORT}/${dbConfig.SLIDEWIKIDATABASE}`;
 
@@ -41,6 +49,9 @@ if (jobTypes.length) {
         console.warn('Job %s for deck %s failed', job.attrs.name, job.attrs.data.deckId);
         console.warn(err.message);
     });
+
+    process.on('SIGTERM', gracefulStop);
+    process.on('SIGINT' , gracefulStop);
 }
 
 module.exports = agenda;
