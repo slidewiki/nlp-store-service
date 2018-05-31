@@ -74,11 +74,11 @@ console.log();
 check(solrConfig);
 
 let agendaJobsCollection = (!co.isEmpty(process.env.AGENDA_JOBS_COLLECTION)) ? process.env.AGENDA_JOBS_COLLECTION : 'agendaJobs';
-let agendaMaxConcurrency = (!co.isEmpty(process.env.AGENDA_MAX_CONCURRENCY)) ? process.env.AGENDA_MAX_CONCURRENCY : 2;
+let agendaJobsConcurrency = (!co.isEmpty(process.env.AGENDA_JOBS_CONCURRENCY)) ? process.env.AGENDA_JOBS_CONCURRENCY : 1;
 
 let agendaConfig = {
     AGENDA_JOBS_COLLECTION: agendaJobsCollection, 
-    AGENDA_MAX_CONCURRENCY: agendaMaxConcurrency,
+    AGENDA_JOBS_CONCURRENCY: agendaJobsConcurrency,
 };
 
 check(agendaConfig);

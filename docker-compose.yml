@@ -16,4 +16,4 @@ nlpstore:
     - SERVICE_URL_DECK=https://deckservice.experimental.slidewiki.org
     - SERVICE_URL_NLP=https://nlpservice.experimental.slidewiki.org
     - AGENDA_JOBS_COLLECTION=agendaJobs
-    - AGENDA_MAX_CONCURRENCY=2
+    - AGENDA_JOBS_CONCURRENCY=1

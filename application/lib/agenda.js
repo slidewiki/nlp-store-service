@@ -12,7 +12,9 @@ let agenda = new Agenda({
         address: connectionString,
         collection: agendaConfig.AGENDA_JOBS_COLLECTION,
     },
-    maxConcurrency: agendaConfig.AGENDA_MAX_CONCURRENCY,
+
+    // number of a specific job running concurrently
+    defaultConcurrency: agendaConfig.AGENDA_JOBS_CONCURRENCY,
 });
 
 let jobTypes = process.env.JOB_TYPES ? process.env.JOB_TYPES.split(',') : [];

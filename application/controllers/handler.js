@@ -16,15 +16,7 @@ module.exports = {
         let deckId = request.params.deckId;
         nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult){
-                // if nlp result is not already stored, compute it now
-                return nlpStore.updateNLPForDeck(deckId).then( () => {
-                    return nlpDB.get(deckId).then( (nlpResult) => {
-                        if(!nlpResult)
-                            reply(boom.notFound());
-                        else 
-                            reply(nlpResult);
-                    });
-                });
+                return reply(boom.notFound());
             }
             else{
                 reply(nlpResult);
@@ -78,27 +70,9 @@ module.exports = {
 
         nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult){
-                // if nlp result is not already stored, compute it now
-                nlpStore.updateNLPForDeck(deckId).then( () => {
-                    return nlpDB.get(deckId).then( (nlpResult) => {
-                        if(!nlpResult){
-                            return reply(boom.notFound());
-                        }
-                        else 
-                            return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
-                                .then( (response) => {
-                                    reply(response);
-                                }); 
-                    });
-                }).catch( (err) => {
-                    if(err.statusCode === 404){
-                        return reply(boom.notFound());
-                    }else{
-                        request.log('error', err);
-                        return reply(boom.badImplementation()); 
-                    }
-                });
-            }else{
+                return reply(boom.notFound());      
+            }
+            else{
                 return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
                     .then( (response) => {
                         reply(response);
