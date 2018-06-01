@@ -1,13 +1,13 @@
 /*
 Handles the requests by executing stuff and replying to the client. Uses promises to get stuff done.
 */
+/* eslint promise/always-return: "off" */
 
 'use strict';
 
 const boom = require('boom');
 const nlpDB = require('../database/nlpDatabase');
 const solr = require('../lib/solrClient');
-const util = require('../lib/util');
 const nlpStore = require('../nlpStore/nlpStore');
 
 module.exports = {
@@ -16,15 +16,7 @@ module.exports = {
         let deckId = request.params.deckId;
         nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult){
-                // if nlp result is not already stored, compute it now
-                return nlpStore.updateNLPForDeck(deckId).then( () => {
-                    return nlpDB.get(deckId).then( (nlpResult) => {
-                        if(!nlpResult)
-                            reply(boom.notFound());
-                        else 
-                            reply(nlpResult);
-                    });
-                });
+                return reply(boom.notFound());
             }
             else{
                 reply(nlpResult);
@@ -78,31 +70,13 @@ module.exports = {
 
         nlpDB.get(deckId).then( (nlpResult) => {
             if(!nlpResult){
-                // if nlp result is not already stored, compute it now
-                nlpStore.updateNLPForDeck(deckId).then( () => {
-                    return nlpDB.get(deckId).then( (nlpResult) => {
-                        if(!nlpResult){
-                            return reply(boom.notFound());
-                        }
-                        else 
-                            return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
-                            .then( (response) => {
-                                reply(response);
-                            }); 
-                    });
-                }).catch( (err) => {
-                    if(err.statusCode === 404){
-                        return reply(boom.notFound());
-                    }else{
-                        request.log('error', err);
-                        return reply(boom.badImplementation()); 
-                    }
-                });
-            }else{
+                return reply(boom.notFound());      
+            }
+            else{
                 return nlpStore.computeTfDf(deckId, nlpResult, minFreq, minForLanguageDependent)
-                .then( (response) => {
-                    reply(response);
-                }); 
+                    .then( (response) => {
+                        reply(response);
+                    });
             }      
         }).catch( (err) => {
             request.log('error', err);
@@ -151,5 +125,6 @@ module.exports = {
             request.log('error', err);
             reply(boom.badImplementation());
         });
-    }
+    }, 
+
 };

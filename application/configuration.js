@@ -37,11 +37,17 @@ if (!co.isEmpty(process.env.DATABASE_PORT)){
     console.log('Using ' + port + ' as database port.');
 }
 
+let slidewikiDbName = 'slidewiki';
+if (process.env.NODE_ENV === 'test') {
+    slidewikiDbName = 'slidewiki_test';
+}
+
+
 let mongoConfig = {
     PORT: port,
     HOST: host,
     NS: 'local',
-    SLIDEWIKIDATABASE: 'slidewiki'
+    SLIDEWIKIDATABASE: slidewikiDbName
 };
 
 console.log('#=========================== MONGO CONFIG ===========================#');
@@ -67,8 +73,22 @@ console.log();
 
 check(solrConfig);
 
-module.exports = {
-    MongoDB: mongoConfig, 
-    solrConfig: solrConfig
+let agendaJobsCollection = (!co.isEmpty(process.env.AGENDA_JOBS_COLLECTION)) ? process.env.AGENDA_JOBS_COLLECTION : 'agendaJobs';
+let agendaJobsConcurrency = (!co.isEmpty(process.env.AGENDA_JOBS_CONCURRENCY)) ? process.env.AGENDA_JOBS_CONCURRENCY : 1;
+
+let agendaConfig = {
+    AGENDA_JOBS_COLLECTION: agendaJobsCollection, 
+    AGENDA_JOBS_CONCURRENCY: agendaJobsConcurrency,
 };
 
+check(agendaConfig);
+
+console.log('#=========================== SOLR CONFIG ===========================#');
+console.log(JSON.stringify(agendaConfig, null, 4));
+console.log();
+
+module.exports = {
+    MongoDB: mongoConfig, 
+    solrConfig: solrConfig, 
+    agendaConfig: agendaConfig,
+};

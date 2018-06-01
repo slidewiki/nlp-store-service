@@ -1,8 +1,27 @@
 'use strict';
 
-const MongoStream = require('mongo-trigger'),
-    nlpStore = require('../nlpStore/nlpStore'),
-    mongoConfig = require('../configuration').MongoDB;
+const MongoStream = require('mongo-trigger');
+const mongoConfig = require('../configuration').MongoDB;
+const deckService = require('../services/deck');
+const saveJob = require('../lib/saveJob');
+
+async function queueUpdate(id) {
+    let deepUsage = await deckService.getDeckDeepUsage(id);
+
+    let deckIds = deepUsage.map( (item) => item.id);
+    
+    // add own deck id to the decks that need to be updated
+    // hint: /deck/:id/deepUsage doesn't include self
+    deckIds.push(id);
+
+    try {
+        for (let deckId of deckIds) {
+            await saveJob('nlpUpdate', { deckId });
+        }
+    } catch(err) {
+        console.warn(err.message);
+    }
+}
 
 module.exports = {
     listen: function(){
@@ -21,13 +40,13 @@ module.exports = {
 
             switch(event.operation){
                 case 'insert':
-                    nlpStore.updateNLPForDeck(event.data._id).catch( (err) => {
-                        console.log('deck listener: deck ' + event.data._id + ' - ' + err.message);
+                    queueUpdate(event.data._id).catch( (err) => {
+                        console.warn('deck listener: deck ' + event.data._id + ' - ' + err.message);
                     });
                     break;
                 case 'update':
-                    nlpStore.updateNLPForDeck(event.targetId).catch( (err) => {
-                        console.log('deck listener: deck ' + event.targetId + ' - ' + err.message);
+                    queueUpdate(event.targetId).catch( (err) => {
+                        console.warn('deck listener: deck ' + event.targetId + ' - ' + err.message);
                     });
                     break;
             }

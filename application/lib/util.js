@@ -29,40 +29,40 @@ let self = module.exports = {
 
     addFreqInDeckTitle: function(nlpResult, field, tfidf){
         (nlpResult[field] || [])
-        .filter( (item) => item.hasOwnProperty('frequencyInDeckTitle'))
-        .forEach( (itemInTitle) => {
-            let found = tfidf[field].find( (itemInField) => itemInField.entry === itemInTitle.entry);
-            if(found)
-                found.frequencyInDeckTitle = itemInTitle.frequencyInDeckTitle;
-        });
+            .filter( (item) => item.hasOwnProperty('frequencyInDeckTitle'))
+            .forEach( (itemInTitle) => {
+                let found = tfidf[field].find( (itemInField) => itemInField.entry === itemInTitle.entry);
+                if(found)
+                    found.frequencyInDeckTitle = itemInTitle.frequencyInDeckTitle;
+            });
     },
 
     parseLangField: function(keys, suffix, termVectorsForField, minFreq){
         return keys.filter( (item) => item.endsWith(suffix))
-        .map( (item) => {
-            if(termVectorsForField[item].tf < minFreq)
-                return;
+            .map( (item) => {
+                if(termVectorsForField[item].tf < minFreq)
+                    return;
 
-            return {
-                entry: this.removeSuffix(item),
-                frequency: termVectorsForField[item].tf, 
-                frequencyOtherDecks: termVectorsForField[item].df 
-            };
-        }).filter(Boolean);
+                return {
+                    entry: this.removeSuffix(item),
+                    frequency: termVectorsForField[item].tf, 
+                    frequencyOtherDecks: termVectorsForField[item].df 
+                };
+            }).filter(Boolean);
     }, 
 
     parse: function(keys, suffix, termVectorsForField, minFreq){
         return keys.filter( (item) => !item.endsWith(suffix))
-        .map( (item) => {
-            if(termVectorsForField[item].tf < minFreq)
-                return;
+            .map( (item) => {
+                if(termVectorsForField[item].tf < minFreq)
+                    return;
 
-            return {
-                entry: item,
-                frequency: termVectorsForField[item].tf, 
-                frequencyOtherDecks: termVectorsForField[item].df 
-            };
-        }).filter(Boolean);;
+                return {
+                    entry: item,
+                    frequency: termVectorsForField[item].tf, 
+                    frequencyOtherDecks: termVectorsForField[item].df 
+                };
+            }).filter(Boolean);
     }, 
 
     removeSuffix: function(term){

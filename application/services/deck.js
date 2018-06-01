@@ -10,5 +10,12 @@ module.exports = {
             uri: Microservices.deck.uri + '/slide/' + slideId,
             json: true,
         });
+    }, 
+
+    getDeckDeepUsage: function(id){
+        return rp.get({
+            uri: `${Microservices.deck.uri}/deck/${id}/deepUsage`,
+            json: true,
+        });
     }
 };

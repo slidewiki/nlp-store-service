@@ -1,3 +1,4 @@
+/* eslint promise/always-return: "off" */
 'use strict';
 
 const Db = require('mongodb').Db,
@@ -43,14 +44,14 @@ function getNextId(db, collectionName, fieldName) {
             field: fieldNameCorrected
         },
         null, //no sort
-            {
-                $inc: {
-                    seq: step
-                }
-            }, {
-                upsert: true, //if there is a problem with _id insert will fail
-                new: true //insert returns the updated document
-            })
+        {
+            $inc: {
+                seq: step
+            }
+        }, {
+            upsert: true, //if there is a problem with _id insert will fail
+            new: true //insert returns the updated document
+        })
             .then((result) => {
                 console.log('getNextId: returned result', result);
                 if (result.value && result.value.seq) {
@@ -74,21 +75,23 @@ function getNextId(db, collectionName, fieldName) {
 }
 
 module.exports = {
+
+    /* eslint-disable promise/catch-or-return, no-unused-vars*/
     createDatabase: function (dbname) {
         dbname = testDbName(dbname);
-
-        let myPromise = new Promise(function (resolve, reject) {
+        let myPromise = new Promise((resolve, reject) => {
             let db = new Db(dbname, new Server(config.HOST, config.PORT));
-            const connection = db.open()
-            .then((connection) => {
-                connection.collection('test').insertOne({ //insert the first object to know that the database is properly created TODO this is not real test....could fail without your knowledge
-                    id: 1,
-                    data: {}
-                }, (data) => {
-                    resolve(connection);
+            db.open()
+                .then((connection) => {
+                    connection.collection('test').insertOne({ //insert the first object to know that the database is properly created TODO this is not real test....could fail without your knowledge
+                        id: 1,
+                        data: {}
+                    }, () => {
+                        resolve(connection);
+                    });
                 });
-            });
         });
+        /* eslint-enable promise/catch-or-return, no-unused-vars */
 
         return myPromise;
     },
@@ -97,13 +100,13 @@ module.exports = {
         dbname = testDbName(dbname);
 
         return this.connectToDatabase(dbname)
-        .then((db) => {
-            const DatabaseCleaner = require('database-cleaner');
-            const databaseCleaner = new DatabaseCleaner('mongodb');
-            return new Promise((resolve) => databaseCleaner.clean(db, resolve));
-        }).catch((error) => {
-            throw error;
-        });
+            .then((db) => {
+                const DatabaseCleaner = require('database-cleaner');
+                const databaseCleaner = new DatabaseCleaner('mongodb');
+                return new Promise((resolve) => databaseCleaner.clean(db, resolve));
+            }).catch((error) => {
+                throw error;
+            });
     },
 
     connectToDatabase: function (dbname) {
@@ -113,13 +116,17 @@ module.exports = {
             return Promise.resolve(dbConnection);
         else
             return MongoClient.connect('mongodb://' + config.HOST + ':' + config.PORT + '/' + dbname)
-            .then((db) => {
-                if (db.s.databaseName !== dbname)
-                    throw new 'Wrong Database!';
-                dbConnection = db;
-                return db;
-            });
+                .then((db) => {
+                    if (db.s.databaseName !== dbname)
+                        throw new 'Wrong Database!';
+                    dbConnection = db;
+                    return db;
+                });
 
+    },
+
+    getCollection: function(name) {
+        return module.exports.connectToDatabase().then((db) => db.collection(name));
     },
 
     getNextIncrementationValueForCollection: function (dbconn, collectionName, fieldName) {
