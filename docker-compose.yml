@@ -13,12 +13,14 @@ services:
     environment:
       - APPLICATION_PORT=80
       - DATABASE_PORT=27017
-      - DATABASE_URL=mongodb # use a url or the name, defined in the docker-compose file
+      - DATABASE_URL=mongodb
       - VIRTUAL_HOST=nlpstore.experimental.slidewiki.org
       - LETSENCRYPT_HOST=nlpstore.experimental.slidewiki.org
       - LETSENCRYPT_EMAIL=meissner@informatik.uni-leipzig.de
       - SERVICE_URL_DECK=https://deckservice.experimental.slidewiki.org
       - SERVICE_URL_NLP=https://nlpservice.experimental.slidewiki.org
+      - AGENDA_JOBS_COLLECTION=agendaJobs
+      - AGENDA_JOBS_CONCURRENCY=1
     network_mode: bridge
 
   indexer:
@@ -30,7 +32,7 @@ services:
       - solr
     environment:
       - DATABASE_PORT=27017
-      - DATABASE_URL=mongodb # use a url or the name, defined in the docker-compose file
+      - DATABASE_URL=mongodb
       - SERVICE_URL_DECK=https://deckservice.experimental.slidewiki.org
       - SERVICE_URL_NLP=https://nlpservice.experimental.slidewiki.org
       - AGENDA_JOBS_COLLECTION=agendaJobs
