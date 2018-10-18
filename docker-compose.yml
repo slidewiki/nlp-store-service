@@ -18,7 +18,6 @@ services:
       - LETSENCRYPT_HOST=nlpstore.experimental.slidewiki.org
       - LETSENCRYPT_EMAIL=meissner@informatik.uni-leipzig.de
       - SERVICE_URL_DECK=https://deckservice.experimental.slidewiki.org
-      - SERVICE_URL_NLP=https://nlpservice.experimental.slidewiki.org
       - AGENDA_JOBS_COLLECTION=agendaJobs
       - AGENDA_JOBS_CONCURRENCY=1
     network_mode: bridge
